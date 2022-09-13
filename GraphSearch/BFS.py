@@ -25,8 +25,10 @@ def bfs(visited, traffic_map, city):
         print(m, end = " ")
 
         for neighbour in traffic_map[m]:
+            print(f"neighbour = {neighbour}")
             if neighbour not in visited:
                 visited.append(neighbour)
                 queue.append(neighbour)
+    print(end="\n")
 
 bfs(visited=visited, traffic_map=graph, city="A")
