@@ -1,5 +1,5 @@
 # Use example traffic map to test basic GraphSearch Algorithms
-# Homework for 13th Sept.
+### Homework for 13th Sept.
 
 #### Basic version: traffic map with direction and cost
 
