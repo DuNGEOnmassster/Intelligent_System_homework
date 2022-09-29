@@ -83,6 +83,7 @@ g1.buildGraph(image)
 start_name = (image.shape[1] * 193) + 5
 tic = time.time()
 g1.dijkstra(g1.getVertex(start_name))
+pq, closed = g1.astar(start_name, 0)
 toc = time.time()
 print("\n Time taken: {} seconds".format(toc-tic))
 
