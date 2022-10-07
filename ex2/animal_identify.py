@@ -1,7 +1,9 @@
 import os
 import numpy as np
+from itertools import combinations
 from rules import init_rules, Point
 import argparse
+
 
 
 def parse_args():
@@ -47,15 +49,41 @@ def get_pattern(text, args):
     return conditions
 
 
+def get_permutations(conditions):
+    perm = []
+    if len(conditions) == 1:
+        return [conditions]
+    for i in range(len(conditions)):
+        s = conditions[:i] + conditions[i+1:]
+        p = get_permutations(s)
+        for x in p:
+            perm.append(conditions[i:i+1]+x)
+
+    return perm
+
+
+def get_combination(conditions):
+    comb = []
+    if len(conditions) == 1:
+        return [conditions]
+    for i in range(1,len(conditions)+1):
+        for tuples in combinations((conditions), i):
+            comb.append([c for c in tuples])
+
+    return comb
+
+
 def search(conditions, args):
     datasets, emissions, targets = init_rules(args.extend)
     print(conditions)
+    # find the every condition combination to get results, put result as new condition
+    comb = get_combination(conditions)
+    print(comb)
+    # if one result in target, return the target
+    ...
     for item in emissions:
         print(f"rules:{item.rules} ➡️ result:{item.result}")
-        # find the every combination to get results
-        ...
-        # if one result in target, return the target
-        ...
+
 
 
 
