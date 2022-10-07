@@ -28,7 +28,7 @@ def init_rules(extend):
                         Point([7, 26, 27, 29],30), Point([7, 31, 32],33),
                     ]
 
-        targets = [6, 7, 11, 13, 15, 18, 20, 23, 25, 28, 30, 33]
+        targets = [18, 20, 23, 25, 28, 30, 33]
 
     return datasets, emissions, targets
 

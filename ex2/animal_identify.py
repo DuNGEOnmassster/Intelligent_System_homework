@@ -33,6 +33,7 @@ def value2key(dict, value):
 
 def get_pattern(text, args):
     datasets, emissions, targets = init_rules(args.extend)
+    conditions = []
     init_split = text.split(sep="\n")
     for sentence in init_split:
         sen_list = sentence.split("：")
@@ -40,15 +41,31 @@ def get_pattern(text, args):
             condition = sen_list[1].split("某动物")[-1]
             if condition in datasets.values(): # Avoid IndexError from fault condition
                 rule = value2key(datasets, condition)
-                print(f"{rule}:{condition}")
-                
+                # print(f"{rule}:{condition}")
+                conditions.append(rule)
+
+    return conditions
+
+
+def search(conditions, args):
+    datasets, emissions, targets = init_rules(args.extend)
+    print(conditions)
+    for item in emissions:
+        print(f"rules:{item.rules} ➡️ result:{item.result}")
+        # find the every combination to get results
+        ...
+        # if one result in target, return the target
+        ...
+
 
 
 def find_rules():
     args = parse_args()
     text, is_file = load_file(args.input)
     print(f"It is {is_file} that this is a file")
-    get_pattern(text, args)
+    conditions = get_pattern(text, args)
+    search(conditions, args)
+
 
 
 if __name__ == "__main__":
