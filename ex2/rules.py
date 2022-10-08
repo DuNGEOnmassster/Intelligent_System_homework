@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Point:
-    rules: list
+    rules: set
     result: int
 
 
@@ -20,12 +20,12 @@ def init_rules(extend):
                     33:"是海燕", 34:"吃肉", 35:"有暗斑点",
                     }
         
-        emissions = [   Point([1],6), Point([2],6), Point([3],7), Point([4, 5],7), 
-                        Point([6, 8, 9, 10],11), Point([6, 34],11), 
-                        Point([6, 12],13), Point([13, 14],15), Point([11, 16, 17, 34],18),
-                        Point([11, 16, 19],20), Point([13, 16, 21, 22, 35],23), 
-                        Point([13, 17, 24],25), Point([7, 21, 22, 26, 27],28),
-                        Point([7, 26, 27, 29],30), Point([7, 31, 32],33),
+        emissions = [   Point(set([1]),6), Point(set([2]),6), Point(set([3]),7), Point(set([4, 5]),7), 
+                        Point(set([6, 8, 9, 10]),11), Point(set([6, 34]),11), 
+                        Point(set([6, 12]),13), Point(set([13, 14]),15), Point(set([11, 16, 17, 34]),18),
+                        Point(set([11, 16, 19]),20), Point(set([13, 16, 21, 22, 35]),23), 
+                        Point(set([13, 17, 24]),25), Point(set([7, 21, 22, 26, 27]),28),
+                        Point(set([7, 26, 27, 29]),30), Point(set([7, 31, 32]),33),
                     ]
 
         targets = [18, 20, 23, 25, 28, 30, 33]

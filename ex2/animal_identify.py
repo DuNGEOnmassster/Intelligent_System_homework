@@ -68,7 +68,7 @@ def get_combinations(conditions):
         return [conditions]
     for i in range(1,len(conditions)+1):
         for tuples in combinations((conditions), i):
-            comb.append([c for c in tuples])
+            comb.append({c for c in tuples})
 
     return comb
 
@@ -88,8 +88,8 @@ def search(conditions, args):
             if item.rules in comb and item.rules not in visited:
                 print(f"{item.rules} result = {item.result}")
                 # if one result in target, return the target
-                if item.result == 18:
-                    print(f"Find Target: {item.result}")
+                if item.result in targets:
+                    print(f"Find Target: {datasets[item.result]}")
                     return item.result
                     break
                 # else regard result as another condition and restart
@@ -102,8 +102,6 @@ def search(conditions, args):
             else:
                 print(f"cnt:{cnt}\n{item.rules} Not in {comb} or in {visited}")
                 cnt = cnt + 1
-        if cnt > 20:
-            break
     
 
 def find_rules():
