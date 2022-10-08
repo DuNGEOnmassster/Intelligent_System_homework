@@ -8,10 +8,12 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description="Animal identify system")
 
-    parser.add_argument("--extend", default=False,
-                        help="whether use extend rules or not, default False")
     parser.add_argument("-i","--input", default="./dataset/test.txt",
                         help="input test sentense for identification")
+    parser.add_argument("--extend", default=False,
+                        help="whether use extend rules or not, default False")
+    parser.add_argument("--extend_input", default="./dataset/extend_rules.txt",
+                        help="input file to extend rules.")
 
     return parser.parse_args()
 
@@ -32,7 +34,7 @@ def value2key(dict, value):
     return [k for k, v in dict.items() if v == value][0]
 
 
-def get_pattern(text, args):
+def get_test_pattern(text, args):
     datasets, emissions, targets = init_rules(args.extend)
     conditions = []
     init_split = text.split(sep="\n")
@@ -47,6 +49,28 @@ def get_pattern(text, args):
 
     return conditions
 
+
+def get_rule_pattern(text, args):
+    datasets, emissions, targets = init_rules(False)
+    init_split = text.split(sep="\n")
+    for sentence in init_split:
+        sen_list = sentence.split(sep="：")
+        if len(sen_list) == 2: # Capable to resist the distraction of useless message
+            result = sen_list[0].split(sep="）")[-1]
+            condition_list = sen_list[1][:-1].split(sep="，")
+            print(f"{condition_list} result={result}")
+            # Attend new conditions and results into datasets
+            for item in condition_list:
+                if item not in datasets.values():
+                    print(f"{item} not in datasets")
+                    print(len(datasets))
+                    datasets[len(datasets)+1] = item
+            if result not in datasets.values():
+                print(f"{result} not in datasets")
+                datasets[len(datasets)+1] = result
+
+    print(datasets)
+    return datasets, emissions, targets
 
 def get_permutations(conditions):
     perm = []
@@ -107,8 +131,10 @@ def find_rules():
     args = parse_args()
     text, is_file = load_file(args.input)
     print(f"It is {is_file} that this is a file")
-    conditions = get_pattern(text, args)
-    search(conditions, args)
+    conditions = get_test_pattern(text, args)
+    # search(conditions, args)
+    extend_text, isfile = load_file(args.extend_input)
+    _,_,_ = get_rule_pattern(extend_text, args)
 
 
 if __name__ == "__main__":
