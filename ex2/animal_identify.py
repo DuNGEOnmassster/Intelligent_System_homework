@@ -43,7 +43,7 @@ def get_test_pattern(text, args):
         datasets, emissions, targets = get_rule_pattern(rules_text)
     else:
         datasets, emissions, targets = init_rules()
-
+    
     conditions = []
     init_split = text.split(sep="\n")
     for sentence in init_split:
@@ -116,7 +116,12 @@ def get_combinations(conditions):
 
 
 def search(conditions, args):
-    datasets, emissions, targets = init_rules()
+    if args.extend:
+        print("Search in extend rules")
+        rules_text,_ = load_file(args.extend_rules)
+        datasets, emissions, targets = get_rule_pattern(rules_text)
+    else:
+        datasets, emissions, targets = init_rules()
     print(f"conditions = {conditions}")
     # find the every condition combination to get results, put result as new condition
     comb = get_combinations(conditions)
@@ -133,7 +138,7 @@ def search(conditions, args):
                 if item.result in targets:
                     print(f"Find Target: {datasets[item.result]}")
                     return item.result
-                    break
+                    
                 # else regard result as another condition and restart
                 else:
                     conditions.append(item.result)
