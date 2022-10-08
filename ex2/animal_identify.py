@@ -79,19 +79,31 @@ def search(conditions, args):
     # find the every condition combination to get results, put result as new condition
     comb = get_combinations(conditions)
     print(comb)
+
+    visited = []
+    cnt = 0
     while True:
         for item in emissions:
             # print(f"rules:{item.rules} ➡️ result:{item.result}")
-            if item.rules in comb:
+            if item.rules in comb and item.rules not in visited:
                 print(f"{item.rules} result = {item.result}")
                 # if one result in target, return the target
-                if item.result in targets:
+                if item.result == 18:
+                    print(f"Find Target: {item.result}")
                     return item.result
+                    break
                 # else regard result as another condition and restart
                 else:
                     conditions.append(item.result)
+                    visited.append(item.rules)
                     comb = get_combinations(conditions)
                     print(f"new conditions is {conditions}")
+                    # import pdb; pdb.set_trace()
+            else:
+                print(f"cnt:{cnt}\n{item.rules} Not in {comb} or in {visited}")
+                cnt = cnt + 1
+        if cnt > 20:
+            break
     
 
 def find_rules():
