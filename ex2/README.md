@@ -52,4 +52,6 @@ F4：有黑色条纹
 
 目标条件为：该动物是什么？
 
+已完成在[V1提交](https://github.com/DuNGEOnmassster/Intelligent_System_homework/commit/0e84b970e44d75ac634c6f941071381645689127)
+
 ![](./demo.png)
