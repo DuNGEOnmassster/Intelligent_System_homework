@@ -5,7 +5,6 @@ from rules import init_rules, Point
 import argparse
 
 
-
 def parse_args():
     parser = argparse.ArgumentParser(description="Animal identify system")
 
@@ -75,10 +74,10 @@ def get_combinations(conditions):
 
 def search(conditions, args):
     datasets, emissions, targets = init_rules(args.extend)
-    print(conditions)
+    print(f"conditions = {conditions}")
     # find the every condition combination to get results, put result as new condition
     comb = get_combinations(conditions)
-    print(comb)
+    print(f"combinations = {comb}")
 
     visited = []
     cnt = 0
@@ -100,7 +99,7 @@ def search(conditions, args):
                     print(f"new conditions is {conditions}")
                     # import pdb; pdb.set_trace()
             else:
-                print(f"cnt:{cnt}\n{item.rules} Not in {comb} or in {visited}")
+                # print(f"cnt:{cnt}\n{item.rules} Not in {comb} or in {visited}")
                 cnt = cnt + 1
     
 
@@ -110,7 +109,6 @@ def find_rules():
     print(f"It is {is_file} that this is a file")
     conditions = get_pattern(text, args)
     search(conditions, args)
-
 
 
 if __name__ == "__main__":
