@@ -62,7 +62,7 @@ def get_permutations(conditions):
     return perm
 
 
-def get_combination(conditions):
+def get_combinations(conditions):
     comb = []
     if len(conditions) == 1:
         return [conditions]
@@ -77,15 +77,22 @@ def search(conditions, args):
     datasets, emissions, targets = init_rules(args.extend)
     print(conditions)
     # find the every condition combination to get results, put result as new condition
-    comb = get_combination(conditions)
+    comb = get_combinations(conditions)
     print(comb)
-    # if one result in target, return the target
-    ...
-    for item in emissions:
-        print(f"rules:{item.rules} ➡️ result:{item.result}")
-
-
-
+    while True:
+        for item in emissions:
+            # print(f"rules:{item.rules} ➡️ result:{item.result}")
+            if item.rules in comb:
+                print(f"{item.rules} result = {item.result}")
+                # if one result in target, return the target
+                if item.result in targets:
+                    return item.result
+                # else regard result as another condition and restart
+                else:
+                    conditions.append(item.result)
+                    comb = get_combinations(conditions)
+                    print(f"new conditions is {conditions}")
+    
 
 def find_rules():
     args = parse_args()
