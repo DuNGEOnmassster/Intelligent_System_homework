@@ -4,12 +4,13 @@ from dataclasses import dataclass
 
 def init():
     mapx = np.zeros((8,8))
-    print(mapx)
     
+    return mapx
 
 def A_star():
     pass
 
 if __name__ == "__main__":
-    init()
+    chessboard = init()
+
 
