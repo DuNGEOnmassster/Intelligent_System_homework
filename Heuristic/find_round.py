@@ -1,3 +1,6 @@
+from turtle import down
+
+
 def get_boundary():
     down_a = 21012
     up_b = 88088
@@ -35,14 +38,14 @@ def check_possible(down_a, up_b, head, cnt):
     lenx = get_lenx(down_a, cnt)
     min_num = int(head_str + '0'*lenx + tail_str)
     max_num = int(head_str + '9'*lenx + tail_str)
-    print(f"max = {max_num} min = {min_num}")
-    print(f"down_a = {down_a}, up_b = {up_b}")
+    # print(f"max = {max_num} min = {min_num}")
+    # print(f"down_a = {down_a}, up_b = {up_b}")
     return max_num >= down_a and min_num <= up_b
 
 
 def get_lenx(down_a, cnt):
     mid = get_mid(down_a)
-    print(f"mid = {mid}")
+    # print(f"mid = {mid}")
     if len(str(down_a))%2 == 1:
         len_x = 2*(mid-cnt)-1
     else:
@@ -50,21 +53,38 @@ def get_lenx(down_a, cnt):
     return len_x
 
 
+def get_extend(down_a, up_b, head, cnt):
+    new_head = head.copy()
+    ans = []
+    possibles = get_potential_possible(cnt)
+    for p in possibles:
+        new_head.append(p)
+        if check_possible(down_a, up_b, head, cnt):
+            ans.append(new_head)
+        new_head.pop()
+    return ans
+
+
 def get_solution(down_a, up_b):
     cnt = 0
+    head = []
+    ans = []
     while cnt <= get_mid(down_a):
         possibles = get_potential_possible(cnt)
-        head = []
         for p in possibles:
             head.append(p)
             if check_possible(down_a, up_b, head, cnt):
                 # for every possible number, keep on 
+                ans.append(head.copy())
                 print(head)
 
             head.pop()
-            
+        # ans = get_extend(down_a, up_b, head, cnt)
+        # print(ans)
         # after getting all the possible solution, cnt+1
         cnt = cnt + 1
+
+    print(ans)
 
 def test_struct():
     head = []
@@ -77,4 +97,4 @@ def test_struct():
 if __name__ == "__main__":
     down_a, up_b = get_boundary()
     print(f"check possibles = {check_possible(down_a, up_b, ['6'], 0)}")
-    test_struct()
+    get_solution(down_a, up_b)
