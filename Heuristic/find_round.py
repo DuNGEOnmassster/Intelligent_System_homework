@@ -1,5 +1,4 @@
-from turtle import down
-
+import numpy as np
 
 def get_boundary():
     down_a = 21012
@@ -7,9 +6,11 @@ def get_boundary():
     return down_a, up_b
 
 
-def get_potential_possible(cnt):
+def get_potential_possible(cnt, final):
     if cnt == 0:
         return ['1', '6', '8', '9']
+    elif cnt == final:
+        return ['0', '1', '8']
     else:
         return ['0', '1', '6', '8', '9']
 
@@ -53,10 +54,10 @@ def get_lenx(down_a, cnt):
     return len_x
 
 
-def get_extend(down_a, up_b, head, cnt):
+def get_extend(down_a, up_b, head, cnt, mid):
     new_head = head.copy()
     ans = []
-    possibles = get_potential_possible(cnt)
+    possibles = get_potential_possible(cnt, mid)
     for p in possibles:
         new_head.append(p)
         if check_possible(down_a, up_b, head, cnt):
@@ -69,8 +70,9 @@ def get_solution(down_a, up_b):
     cnt = 0
     head = []
     ans = []
-    while cnt <= get_mid(down_a):
-        possibles = get_potential_possible(cnt)
+    mid = get_mid(down_a)
+    while cnt <= mid:
+        possibles = get_potential_possible(cnt, mid)
         for p in possibles:
             head.append(p)
             if check_possible(down_a, up_b, head, cnt):
@@ -79,22 +81,26 @@ def get_solution(down_a, up_b):
                 print(head)
 
             head.pop()
-        # ans = get_extend(down_a, up_b, head, cnt)
-        # print(ans)
+        print(ans)
         # after getting all the possible solution, cnt+1
         cnt = cnt + 1
 
-    print(ans)
+    # print(ans)
+
 
 def test_struct():
-    head = []
+    ans = {i:[] for i in range(3)}
+    print(ans)
     for i in range(3):
-        head.append(i)
-        print(f"{i}: head = {head}")
-        head.pop()
-
+        ans[i].append(i)
+    print(ans)
+    a = 54829
+    num = '1'
+    if 0 < int(str(a)[-1*int(num)]):
+        print(1)
 
 if __name__ == "__main__":
     down_a, up_b = get_boundary()
-    print(f"check possibles = {check_possible(down_a, up_b, ['6'], 0)}")
+    print(f"check possibles = {check_possible(down_a, up_b, ['6', '8'], 1)}")
     get_solution(down_a, up_b)
+    test_struct()
