@@ -42,7 +42,21 @@ def init():
     start = get_start(args)
     target = get_target(args)
     print(f"start:\n{start}\ntarget:\n{target}")
+    return start, target
+
+
+def get_differ(now, target):
+    cnt = 0
+    for i in range(9):
+        if now[i//3][i%3] == target[i//3][i%3]:
+            cnt = cnt + 1
+    return cnt
+
+
+def process(start, target):
+    open_list = []
 
 
 if __name__ == "__main__":
-    init()
+    start,target = init()
+    print(get_differ(start, target))
