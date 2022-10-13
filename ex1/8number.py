@@ -53,12 +53,49 @@ def get_differ(now, target):
     return cnt
 
 
-def process(start, target):
-    open_list = []
-    start_node = number_Node(start, 0, get_differ(start,target), None)
+def get_best_extend(extend_list):
+    # f = h + g, get the smallest f
+    min_f = 10086
+    for item in extend_list:
+        if (item.h + item.g) < min_f:
+            min_f = item.h + item.g
+            goal = item
+
+    return goal
+
+
+def get_extend(now_node, close_list):
+    extend_list = []
+    # find the location of zero
+    zero_index = np.where(now_node.map == 0)[0][0]
+    row = zero_index // 3
+    col = zero_index % 3
+
+
+    return extend_list
     
+
+
+def process(start, target):
+    # initialize list and node
+    open_list = []
+    close_list = set()
+    start_node = number_Node(start, 0, get_differ(start,target), None)
+    open_list.append(start_node)
+    close_list.add(start_node)
+    pre_node = start_node
+    # while open list not empty
+    while open_list:
+        print("not empty")
+        open_list.pop()
+        extend_list = get_extend(pre_node, open_list)
+        new_node = get_best_extend(extend_list)
+        new_node.f = pre_node.f + 1
+        open_list.append(new_node)
+        
+
 
 
 if __name__ == "__main__":
     start,target = init()
-    print(get_differ(start, target))
+    process(start, target)

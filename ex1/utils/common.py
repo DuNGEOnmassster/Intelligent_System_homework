@@ -4,8 +4,8 @@ from dataclasses import dataclass
 
 @dataclass
 class number_Node:
-    map: np.array() # now map
+    map: list # now map
     h: int  # price already paid
     g: int  # differ bewteen target
-    pre_map: np.array() # pre map
+    pre_map: list # pre map
 
