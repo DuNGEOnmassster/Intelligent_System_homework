@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-
+from utils.common import number_Node
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Animal identify system")
@@ -55,6 +55,8 @@ def get_differ(now, target):
 
 def process(start, target):
     open_list = []
+    start_node = number_Node(start, 0, get_differ(start,target), None)
+    
 
 
 if __name__ == "__main__":
