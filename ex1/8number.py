@@ -66,11 +66,13 @@ def get_best_extend(extend_list):
 
 def get_extend(now_node, close_list):
     extend_list = []
-    # find the location of zero
+    # find the position of zero
     zero_index = np.where(now_node.map == 0)[0][0]
     row = zero_index // 3
     col = zero_index % 3
-
+    # find the potential extend position
+    
+    # if not in close list, add into close list and extend list
 
     return extend_list
     
