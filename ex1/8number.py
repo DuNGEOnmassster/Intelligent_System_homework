@@ -56,6 +56,7 @@ def get_differ(now, target):
 def get_best_extend(extend_list):
     # f = h + g, get the smallest f
     min_f = 10086
+    goal = None
     for item in extend_list:
         if (item.h + item.g) < min_f:
             min_f = item.h + item.g
@@ -81,10 +82,10 @@ def get_extend(now_node, close_list):
 def process(start, target):
     # initialize list and node
     open_list = []
-    close_list = set()
+    close_list = []
     start_node = number_Node(start, 0, get_differ(start,target), None)
     open_list.append(start_node)
-    close_list.add(start_node)
+    close_list.append(start_node)
     pre_node = start_node
     # while open list not empty
     while open_list:
@@ -92,8 +93,15 @@ def process(start, target):
         open_list.pop()
         extend_list = get_extend(pre_node, open_list)
         new_node = get_best_extend(extend_list)
-        new_node.f = pre_node.f + 1
-        open_list.append(new_node)
+        if new_node == None:
+            print("search failed")
+        else:
+            if new_node.g == 0:
+                print(f"achieve target!")
+                return new_node
+            else:
+                new_node.f = pre_node.f + 1
+                open_list.append(new_node)
         
 
 
