@@ -1,5 +1,4 @@
 import os
-import numpy as np
 from itertools import combinations
 from rules import init_rules, Point
 import argparse
@@ -123,7 +122,6 @@ def search(conditions, args):
     print(f"conditions = {conditions}")
     # find the every condition combination to get results, put result as new condition
     comb = get_combinations(conditions)
-    print(f"combinations = {comb}")
 
     visited = []
     cnt = 0
@@ -146,6 +144,10 @@ def search(conditions, args):
                     # import pdb; pdb.set_trace()
             else:
                 cnt = cnt + 1
+        
+        if cnt > len(comb):
+            print("Failed to recognize corresponding animal")
+            return None
     
 
 def find_rules():
@@ -153,7 +155,7 @@ def find_rules():
     text, is_file = load_file(args.test)
     print(f"It is {is_file} that this is a file")
     conditions = get_test_pattern(text, args)
-    search(conditions, args)
+    target = search(conditions, args)
 
 
 if __name__ == "__main__":
