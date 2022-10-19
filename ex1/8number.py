@@ -66,15 +66,21 @@ def get_best_extend(extend_list):
 
 
 def get_extend(now_node, close_list):
+    extend_rules = {0:[1], 1:[0,2], 2:[1]}
     extend_list = []
     # find the position of zero
     zero_index = np.where(now_node.map == 0)[0][0]
     row = zero_index // 3
     col = zero_index % 3
     # find the potential extend position
+    row_extend = [[row, i] for i in extend_rules[col]]
+    col_extend = [[j, col] for j in extend_rules[row]]
+    print(f"row:{row}, col:{col}")
+    print(f"row_extend = {row_extend}, col_extend = {col_extend}")
+    # create new extend map for every potential extend position
     
     # if not in close list, add into close list and extend list
-
+    
     return extend_list
     
 
