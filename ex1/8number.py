@@ -73,12 +73,17 @@ def get_extend(now_node, close_list):
     row = zero_index // 3
     col = zero_index % 3
     # find the potential extend position
-    row_extend = [[row, i] for i in extend_rules[col]]
-    col_extend = [[j, col] for j in extend_rules[row]]
-    print(f"row:{row}, col:{col}")
-    print(f"row_extend = {row_extend}, col_extend = {col_extend}")
+    potential_extend = [[row, i] for i in extend_rules[col]]
+    for j in extend_rules[row]:
+        potential_extend.append([j, col])
+    print(f"potential_extend = {potential_extend}")
     # create new extend map for every potential extend position
-    
+    for extend_point in potential_extend:
+        extend_node = number_Node(now_node.map, now_node.h+1, now_node.g, now_node)
+        extend_node.map[row][col] = extend_node.map[extend_point[0]][extend_point[1]]
+        extend_node.map[extend_point[0]][extend_point[1]] = 0
+        print(f"extend node:\n{extend_node.map}")
+        
     # if not in close list, add into close list and extend list
     
     return extend_list
