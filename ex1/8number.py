@@ -66,26 +66,33 @@ def get_best_extend(extend_list):
 
 
 def get_extend(now_node, close_list):
+    now_map = now_node.map.copy()
     extend_rules = {0:[1], 1:[0,2], 2:[1]}
     extend_list = []
+
     # find the position of zero
     zero_index = np.where(now_node.map == 0)[0][0]
     row = zero_index // 3
     col = zero_index % 3
+
     # find the potential extend position
     potential_extend = [[row, i] for i in extend_rules[col]]
     for j in extend_rules[row]:
         potential_extend.append([j, col])
     print(f"potential_extend = {potential_extend}")
+
     # create new extend map for every potential extend position
     for extend_point in potential_extend:
-        extend_node = number_Node(now_node.map, now_node.h+1, now_node.g, now_node)
+        extend_node = number_Node(now_node.map.copy(), now_node.h+1, now_node.g, now_node)
         extend_node.map[row][col] = extend_node.map[extend_point[0]][extend_point[1]]
         extend_node.map[extend_point[0]][extend_point[1]] = 0
         print(f"extend node:\n{extend_node.map}")
-        
-    # if not in close list, add into close list and extend list
-    
+
+        # if not in close list, add into close list and extend list
+        if extend_node.map not in close_list:
+            close_list.append(extend_node.map)
+            extend_list.append(extend_node)
+            
     return extend_list
     
 
@@ -98,6 +105,7 @@ def process(start, target):
     open_list.append(start_node)
     close_list.append(start_node)
     pre_node = start_node
+
     # while open list not empty
     while open_list:
         print("not empty")
