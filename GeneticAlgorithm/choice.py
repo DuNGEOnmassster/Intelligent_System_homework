@@ -1,5 +1,18 @@
 import random
+import argparse
+import math
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Solving Equations with Genetic Algorithms")
+    
+    parser.add_argument("--func", type=str ,default='pow(x,2)',
+                        help="eqution to be solved")
+    parser.add_argument("--num", type=int, default=4,
+                        help="population size")
+    parser.add_argument("--binary_encode", type=bool, default=True,
+                        help="whether use binary encode, default with True")
+
+    return parser.parse_args()
 
 def check_fitness(fitness: dict):
     return sum(fitness.values()) == 1.0
@@ -13,7 +26,7 @@ def get_row_number(n: int):
     return row_number
 
 
-def get_encode():
+def get_encode(row_number: dict):
     pass
 
 
@@ -46,11 +59,13 @@ def get_mutation():
 
 
 def get_init():
-    pheno_type = {'s1', 's2', 's3', 's4'}
-    gene_encode = get_encode()
+    args = parse_args()
+    row_number = get_row_number(args.num)
+    print(row_number)
+    gene_encode = get_encode(row_number)
     fitness = get_fitness()
     N, pxi = get_pxi(fitness)
-
+    
 
 def SGA(C, E, P0, M, end):
     gs = get_select()
@@ -62,4 +77,3 @@ def SGA(C, E, P0, M, end):
 
 if __name__ == "__main__":
     get_init()
-    print(get_row_number(4))
