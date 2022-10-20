@@ -48,15 +48,19 @@ def get_fitness(gene: dict, args):
     return fitness
 
 
-def get_pxi(fitness: dict):
+def get_pxi(fitness: dict, args):
     sum_fitness = sum(fitness.values())
-    num_pheno = len(fitness)
     pxi = {}
     for i in fitness.keys():
-        # print(i)
         pxi[i] = float(str(fitness[i]/sum_fitness))
-    print(f"{num_pheno} phenos in total with sum Pxi probability as {sum(pxi.values())}")
-    return num_pheno, pxi
+    print(f"{args.num} phenos in total with sum Pxi probability as {sum(pxi.values())}")
+    return pxi
+
+
+def get_single_pick(pxi: dict, args):
+    pick_list = []
+    for i in range(args.num):
+        pass
 
 
 def get_select():
@@ -79,7 +83,8 @@ def get_init():
     print(gene)
     fitness = get_fitness(gene, args)
     print(fitness)
-    N, pxi = get_pxi(fitness)
+    pxi = get_pxi(fitness, args)
+    print(pxi)
     
 
 def SGA(C, E, P0, M, end):
