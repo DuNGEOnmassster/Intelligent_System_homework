@@ -2,6 +2,7 @@ import random
 import argparse
 import math
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Solving Equations with Genetic Algorithms")
     
@@ -13,6 +14,7 @@ def parse_args():
                         help="whether use binary encode, default with True")
 
     return parser.parse_args()
+
 
 def check_fitness(fitness: dict):
     return sum(fitness.values()) == 1.0
@@ -26,12 +28,23 @@ def get_row_number(n: int):
     return row_number
 
 
-def get_encode(row_number: dict):
-    pass
+def get_encode(row_number: dict, args):
+    gene = row_number.copy()
+    for item in gene.keys():
+        if args.binary_encode:
+            gene[item] = bin(gene[item])
+        else:
+            break
+    return gene
 
 
-def get_fitness():
-    fitness = {'s1':0.11, 's2':0.15, 's3':0.29, 's4':0.45, 's5':0.23}
+def get_fitness(gene: dict, args):
+    fitness = gene.copy()
+    for item in fitness.keys():
+        if args.binary_encode:
+            fitness[item] = pow(int(fitness[item], 2), 2)
+        else:
+            fitness[item] = pow(fitness[item],2)
     return fitness
 
 
@@ -40,7 +53,7 @@ def get_pxi(fitness: dict):
     num_pheno = len(fitness)
     pxi = {}
     for i in fitness.keys():
-        print(i)
+        # print(i)
         pxi[i] = float(str(fitness[i]/sum_fitness))
     print(f"{num_pheno} phenos in total with sum Pxi probability as {sum(pxi.values())}")
     return num_pheno, pxi
@@ -62,8 +75,10 @@ def get_init():
     args = parse_args()
     row_number = get_row_number(args.num)
     print(row_number)
-    gene_encode = get_encode(row_number)
-    fitness = get_fitness()
+    gene = get_encode(row_number, args)
+    print(gene)
+    fitness = get_fitness(gene, args)
+    print(fitness)
     N, pxi = get_pxi(fitness)
     
 
