@@ -51,10 +51,14 @@ def get_fitness(gene: dict, args):
 def get_pxi(fitness: dict, args):
     sum_fitness = sum(fitness.values())
     pxi = {}
+    cumulative_pxi = {}
+    cnt = 0
     for i in fitness.keys():
         pxi[i] = float(str(fitness[i]/sum_fitness))
+        cumulative_pxi[i] = pxi[i] + cnt
+        cnt = cnt + pxi[i]
     print(f"{args.num} phenos in total with sum Pxi probability as {sum(pxi.values())}")
-    return pxi
+    return pxi, cumulative_pxi
 
 
 def get_single_pick(pxi: dict, args):
@@ -75,17 +79,19 @@ def get_mutation():
     pass
 
 
-def get_init():
+def get_init(is_init=True, row_number=None):
     args = parse_args()
-    row_number = get_row_number(args.num)
-    print(row_number)
+    if is_init:
+        row_number = get_row_number(args.num)
+    print(f"row number is {row_number}")
     gene = get_encode(row_number, args)
-    print(gene)
+    print(f"gene is {gene}")
     fitness = get_fitness(gene, args)
-    print(fitness)
-    pxi = get_pxi(fitness, args)
-    print(pxi)
-    
+    print(f"fitness is {fitness}")
+    pxi, cumulative_pxi = get_pxi(fitness, args)
+    print(f"pxi = {pxi}\ncumulative pxi = {cumulative_pxi}")
+    return cumulative_pxi
+
 
 def SGA(C, E, P0, M, end):
     gs = get_select()
