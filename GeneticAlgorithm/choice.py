@@ -38,6 +38,16 @@ def get_encode(row_number: dict, args):
     return gene
 
 
+def get_decode(gene: dict, args):
+    row_number = gene.copy()
+    for item in row_number.keys():
+        if args.binary_encode:
+            row_number[item] = int(gene[item], 2)
+        else:
+            break
+    return row_number
+
+
 def get_fitness(gene: dict, args):
     fitness = gene.copy()
     for item in fitness.keys():
@@ -61,12 +71,6 @@ def get_pxi(fitness: dict, args):
     return pxi, cumulative_pxi
 
 
-def get_single_pick(pxi: dict, args):
-    pick_list = []
-    for i in range(args.num):
-        pass
-
-
 def get_select(cumulative_pxi: dict, args):
     gs = []
     cumu_list = [i for i in cumulative_pxi.values()]
@@ -76,10 +80,13 @@ def get_select(cumulative_pxi: dict, args):
         while rid > cumu_list[cupxi]:
             cupxi += 1
         gs.append(cupxi)
+    # return new gene: dict
     return gs
 
 
-def get_cross(gs, args):
+def get_cross(gene, gs, args):
+    row_number = get_decode(gene, args)
+    print(row_number)
     pass
 
 
@@ -105,7 +112,7 @@ def get_init(is_init=True, row_number=None):
 def SGA():
     gene, cumulative_pxi, args = get_init()
     gs = get_select(cumulative_pxi, args)
-    gc = get_cross(gs, args)
+    gc = get_cross(gene, gs, args)
     gm = get_mutation()
 
 
