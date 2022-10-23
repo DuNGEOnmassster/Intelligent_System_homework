@@ -67,11 +67,19 @@ def get_single_pick(pxi: dict, args):
         pass
 
 
-def get_select():
-    pass
+def get_select(cumulative_pxi: dict, args):
+    gs = []
+    cumu_list = [i for i in cumulative_pxi.values()]
+    for i in range(args.num):
+        rid = random.uniform(0,1)
+        cupxi = 0
+        while rid > cumu_list[cupxi]:
+            cupxi += 1
+        gs.append(cupxi)
+    return gs
 
 
-def get_cross():
+def get_cross(gs, args):
     pass
 
 
@@ -90,16 +98,16 @@ def get_init(is_init=True, row_number=None):
     print(f"fitness is {fitness}")
     pxi, cumulative_pxi = get_pxi(fitness, args)
     print(f"pxi = {pxi}\ncumulative pxi = {cumulative_pxi}")
-    return cumulative_pxi
+    return gene, cumulative_pxi, args
 
 
-def SGA(C, E, P0, M, end):
-    gs = get_select()
-    gc = get_cross()
+# def SGA(C, E, P0, M, end):
+def SGA():
+    gene, cumulative_pxi, args = get_init()
+    gs = get_select(cumulative_pxi, args)
+    gc = get_cross(gs, args)
     gm = get_mutation()
-    if end:
-        return None
 
 
 if __name__ == "__main__":
-    get_init()
+    SGA()
