@@ -32,7 +32,11 @@ def get_encode(row_number: dict, args):
     gene = row_number.copy()
     for item in gene.keys():
         if args.binary_encode:
-            gene[item] = bin(gene[item])
+            gene[item] = bin(gene[item])   
+            if len(gene[item]) < 7:
+                zero_filling = "0" * (7-len(gene[item]))  
+                gene[item] = "0b"+zero_filling+gene[item][2:] 
+                print(f"warning! new is {gene[item]}")   
         else:
             break
     return gene
@@ -71,23 +75,24 @@ def get_pxi(fitness: dict, args):
     return pxi, cumulative_pxi
 
 
-def get_select(cumulative_pxi: dict, args):
-    gs = []
+def get_select(gene: dict, cumulative_pxi: dict):
+    gs = cumulative_pxi.copy()
+    cumu_name = [i for i in cumulative_pxi.keys()]
     cumu_list = [i for i in cumulative_pxi.values()]
-    for i in range(args.num):
+    for item in gs.keys():
         rid = random.uniform(0,1)
         cupxi = 0
         while rid > cumu_list[cupxi]:
             cupxi += 1
-        gs.append(cupxi)
+        gs[item] = gene[cumu_name[cupxi]]
     # return new gene: dict
     return gs
 
 
 def get_cross(gene, gs, args):
-    row_number = get_decode(gene, args)
-    print(row_number)
-    pass
+    new_number = get_decode(gs, args)
+    print(f"gs = {gs}")
+    print(f"new_number = {new_number}")
 
 
 def get_mutation():
@@ -111,7 +116,7 @@ def get_init(is_init=True, row_number=None):
 # def SGA(C, E, P0, M, end):
 def SGA():
     gene, cumulative_pxi, args = get_init()
-    gs = get_select(cumulative_pxi, args)
+    gs = get_select(gene, cumulative_pxi)
     gc = get_cross(gene, gs, args)
     gm = get_mutation()
 
