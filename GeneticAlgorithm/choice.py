@@ -156,11 +156,11 @@ def get_init(args, is_init=True, row_number=None):
     return gene, cumulative_pxi
 
 
-def check_target(gene: dict, args):
+def check_target(gene: dict, args, cnt):
     gene_number = [i for i in get_decode(gene, args).values()]
     target = get_target(args)
     if target in gene_number:
-        print(f"Find target: {target}")
+        print(f"Find target :{target} in generation {cnt}")
         return True
     else:
         return False
@@ -170,7 +170,9 @@ def check_target(gene: dict, args):
 def SGA():
     args = parse_args()
     gene, cumulative_pxi = get_init(args)
-    while not check_target(gene, args):
+    cnt = 1
+    while not check_target(gene, args, cnt):
+        print(f"Generation {cnt}")
         gs = get_select(gene, cumulative_pxi)
         gc = get_cross(gs, args)
         gene = get_mutation(gc, args)
