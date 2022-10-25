@@ -5,8 +5,6 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description="Solving Equations with Genetic Algorithms")
     
-    parser.add_argument("--func", type=str ,default='pow(x,2)',
-                        help="eqution to be solved")
     parser.add_argument("--num", type=int, default=4,
                         help="population size")
     parser.add_argument("--binary_encode", type=bool, default=True,
@@ -18,7 +16,7 @@ def parse_args():
                         help="declear the maximum of changing bits in a crossing epoch")
     parser.add_argument("--single_mutation_bits", type=int, default=1,
                         help="declear the maximum of mutation bits in a single gene")
-    parser.add_argument("--max_mutation_bits", type=int, default=3,
+    parser.add_argument("--max_mutation_bits", type=int, default=1,
                         help="declear the maximum of total mutation bits in a mutation epoch")
 
     return parser.parse_args()
