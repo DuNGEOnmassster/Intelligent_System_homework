@@ -13,6 +13,15 @@ def parse_args():
     parser.add_argument("--binary_encode", type=bool, default=True,
                         help="whether use binary encode, default with True")
 
+    parser.add_argument("--encode_bits", type=int, default=5,
+                        help="declear the length of encode bits")
+    parser.add_argument("--max_cross_bits", type=int, default=3,
+                        help="declear the maximum of changing bits in a crossing epoch")
+    parser.add_argument("--single_mutation_bits", type=int, default=1,
+                        help="declear the maximum of mutation bits in a single gene")
+    parser.add_argument("--max_mutation_bits", type=int, default=3,
+                        help="declear the maximum of total mutation bits in a mutation epoch")
+
     return parser.parse_args()
 
 
@@ -20,11 +29,11 @@ def check_fitness(fitness: dict):
     return sum(fitness.values()) == 1.0
 
 
-def get_row_number(n: int):
+def get_row_number(args):
     row_number = {}
-    for i in range(n):
+    for i in range(args.num):
         key = "s" + str(i+1)
-        row_number[key] = random.randint(1,31)
+        row_number[key] = random.randint(1, pow(2, args.encode_bits)-1)
     return row_number
 
 
@@ -33,8 +42,8 @@ def get_encode(row_number: dict, args):
     for item in gene.keys():
         if args.binary_encode:
             gene[item] = bin(gene[item])   
-            if len(gene[item]) < 7:
-                zero_filling = "0" * (7-len(gene[item]))  
+            if len(gene[item]) < args.encode_bits + 2:
+                zero_filling = "0" * (args.encode_bits + 2 - len(gene[item]))  
                 gene[item] = "0b"+zero_filling+gene[item][2:] 
                 print(f"warning! new is {gene[item]}")   
         else:
@@ -89,20 +98,36 @@ def get_select(gene: dict, cumulative_pxi: dict):
     return gs
 
 
-def get_cross(gene, gs, args):
+def get_cross(gs: dict, args):
+    gc = gs.copy()
+    gs_keys = [i for i in gs.keys()]
+    cnt = 0
+    cross_group = [[gs[gs_keys[2*i]], gs[gs_keys[2*i+1]]] for i in range(len(gs)//2)]
     new_number = get_decode(gs, args)
     print(f"gs = {gs}")
     print(f"new_number = {new_number}")
+    print(f"cross_group = {cross_group}")
+    for group in cross_group:
+        cross_bits = random.randint(1, args.max_cross_bits)
+        # print(f"cross bits = {cross_bits}, cross step = {group[0][-cross_bits:]}, row step = {group[0][len(group[0])-cross_bits:]}")
+        gc[gs_keys[cnt*2]] = group[0][:len(group[0])-cross_bits] + group[1][-cross_bits:]
+        gc[gs_keys[cnt*2 + 1]] = group[1][:len(group[1])-cross_bits] + group[0][-cross_bits:]
+        cnt += 1
+    print(f"gc = {gc}")
+    print(f"new number after crossing: {get_decode(gc, args)}")
+    # return new gene: dict
+    return gc
 
 
-def get_mutation():
-    pass
+def get_mutation(gc: dict, args):
+
+    # return new gene: dict
 
 
 def get_init(is_init=True, row_number=None):
     args = parse_args()
     if is_init:
-        row_number = get_row_number(args.num)
+        row_number = get_row_number(args)
     print(f"row number is {row_number}")
     gene = get_encode(row_number, args)
     print(f"gene is {gene}")
@@ -117,7 +142,7 @@ def get_init(is_init=True, row_number=None):
 def SGA():
     gene, cumulative_pxi, args = get_init()
     gs = get_select(gene, cumulative_pxi)
-    gc = get_cross(gene, gs, args)
+    gc = get_cross(gs, args)
     gm = get_mutation()
 
 
