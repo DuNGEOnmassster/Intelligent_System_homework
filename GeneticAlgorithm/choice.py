@@ -24,8 +24,11 @@ def parse_args():
     return parser.parse_args()
 
 
-def check_fitness(fitness: dict):
-    return sum(fitness.values()) == 1.0
+def get_target(args):
+    if args.binary_encode:
+        return pow(2, args.encode_bits) - 1
+    else:
+        return 31   # default target
 
 
 def get_row_number(args):
@@ -153,13 +156,24 @@ def get_init(args, is_init=True, row_number=None):
     return gene, cumulative_pxi
 
 
+def check_target(gene: dict, args):
+    gene_number = [i for i in get_decode(gene, args).values()]
+    target = get_target(args)
+    if target in gene_number:
+        print(f"Find target: {target}")
+        return True
+    else:
+        return False
+
+
 # def SGA(C, E, P0, M, end):
 def SGA():
     args = parse_args()
     gene, cumulative_pxi = get_init(args)
-    gs = get_select(gene, cumulative_pxi)
-    gc = get_cross(gs, args)
-    gm = get_mutation(gc, args)
+    while not check_target(gene, args):
+        gs = get_select(gene, cumulative_pxi)
+        gc = get_cross(gs, args)
+        gene = get_mutation(gc, args)
 
 
 if __name__ == "__main__":
