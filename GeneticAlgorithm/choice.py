@@ -127,7 +127,8 @@ def get_mutation(gc: dict, args):
         lucky_bit = random.randint(1, args.encode_bits)
         while 1:
             if gc_mutation_count[gc_keys[lucky_number]] < args.single_mutation_bits:
-                print(lucky_number)
+                print(f"lucky number = {lucky_number}, lucky gene = {gm[gc_keys[lucky_number]]}, lucky bit = {lucky_bit}\
+                    {gm[gc_keys[lucky_number]][-lucky_bit]}, {int(gm[gc_keys[lucky_number]][-lucky_bit])^1}")
                 gc_mutation_count[gc_keys[lucky_number]] += 1
                 break
             else:
