@@ -130,18 +130,17 @@ def get_mutation(gc: dict, args):
                 gene_temp = gm[gc_keys[lucky_number]]
                 print(f"lucky number = {lucky_number}, lucky gene = {gene_temp}, lucky bit = {lucky_bit} \
                     {gm[gc_keys[lucky_number]][-lucky_bit]}, {int(gm[gc_keys[lucky_number]][-lucky_bit])^1}")
-                print(gene_temp[:(7-lucky_bit)] + str(int(gm[gc_keys[lucky_number]][-lucky_bit])^1) + gene_temp[(7-lucky_bit+1):])
+                gm[gc_keys[lucky_number]] = gene_temp[:(7-lucky_bit)] + str(int(gm[gc_keys[lucky_number]][-lucky_bit])^1) + gene_temp[(7-lucky_bit+1):]
                 gc_mutation_count[gc_keys[lucky_number]] += 1
                 break
             else:
                 lucky_number = (lucky_number + 1) % args.num
-
+    print(f"gm = {gm}")
     # return new gene: dict
     return gm
 
 
-def get_init(is_init=True, row_number=None):
-    args = parse_args()
+def get_init(args, is_init=True, row_number=None):
     if is_init:
         row_number = get_row_number(args)
     print(f"row number is {row_number}")
@@ -151,12 +150,13 @@ def get_init(is_init=True, row_number=None):
     print(f"fitness is {fitness}")
     pxi, cumulative_pxi = get_pxi(fitness, args)
     print(f"pxi = {pxi}\ncumulative pxi = {cumulative_pxi}")
-    return gene, cumulative_pxi, args
+    return gene, cumulative_pxi
 
 
 # def SGA(C, E, P0, M, end):
 def SGA():
-    gene, cumulative_pxi, args = get_init()
+    args = parse_args()
+    gene, cumulative_pxi = get_init(args)
     gs = get_select(gene, cumulative_pxi)
     gc = get_cross(gs, args)
     gm = get_mutation(gc, args)
