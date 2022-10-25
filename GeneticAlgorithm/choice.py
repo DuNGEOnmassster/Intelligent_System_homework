@@ -1,6 +1,5 @@
 import random
 import argparse
-import math
 
 
 def parse_args():
@@ -120,8 +119,22 @@ def get_cross(gs: dict, args):
 
 
 def get_mutation(gc: dict, args):
+    gm = gc.copy()
+    gc_keys = [i for i in gc.keys()]
+    gc_mutation_count = {i:0 for i in gc_keys}
+    for mutation in range(args.max_mutation_bits):
+        lucky_number = random.randint(0, args.num-1)
+        lucky_bit = random.randint(1, args.encode_bits)
+        while 1:
+            if gc_mutation_count[gc_keys[lucky_number]] < args.single_mutation_bits:
+                print(lucky_number)
+                gc_mutation_count[gc_keys[lucky_number]] += 1
+                break
+            else:
+                lucky_number = (lucky_number + 1) % args.num
 
     # return new gene: dict
+    return gm
 
 
 def get_init(is_init=True, row_number=None):
@@ -143,7 +156,7 @@ def SGA():
     gene, cumulative_pxi, args = get_init()
     gs = get_select(gene, cumulative_pxi)
     gc = get_cross(gs, args)
-    gm = get_mutation()
+    gm = get_mutation(gc, args)
 
 
 if __name__ == "__main__":
