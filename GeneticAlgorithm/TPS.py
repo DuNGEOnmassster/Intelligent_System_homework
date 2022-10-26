@@ -174,6 +174,7 @@ def SGA():
         gs = get_select(gene, cumulative_pxi)
         gc = get_cross(gs, args)
         gene = get_mutation(gc, args)
+        cnt += 1
 
 
 if __name__ == "__main__":
