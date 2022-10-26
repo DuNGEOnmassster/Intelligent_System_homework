@@ -5,6 +5,8 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description="Solving Equations with Genetic Algorithms")
     
+    parser.add_argument("--func", type=str ,default='pow(x,2)',
+                        help="eqution to be solved")
     parser.add_argument("--num", type=int, default=4,
                         help="population size")
     parser.add_argument("--binary_encode", type=bool, default=True,
@@ -16,7 +18,7 @@ def parse_args():
                         help="declear the maximum of changing bits in a crossing epoch")
     parser.add_argument("--single_mutation_bits", type=int, default=1,
                         help="declear the maximum of mutation bits in a single gene")
-    parser.add_argument("--max_mutation_bits", type=int, default=1,
+    parser.add_argument("--max_mutation_bits", type=int, default=3,
                         help="declear the maximum of total mutation bits in a mutation epoch")
 
     return parser.parse_args()
@@ -84,7 +86,11 @@ def get_pxi(fitness: dict, args):
     return pxi, cumulative_pxi
 
 
-def get_select(gene: dict, cumulative_pxi: dict):
+def get_select(gene: dict, args):
+    fitness = get_fitness(gene, args)
+    print(f"fitness is {fitness}")
+    pxi, cumulative_pxi = get_pxi(fitness, args)
+    print(f"pxi = {pxi}\ncumulative pxi = {cumulative_pxi}")
     gs = cumulative_pxi.copy()
     cumu_name = [i for i in cumulative_pxi.keys()]
     cumu_list = [i for i in cumulative_pxi.values()]
@@ -147,11 +153,8 @@ def get_init(args, is_init=True, row_number=None):
     print(f"row number is {row_number}")
     gene = get_encode(row_number, args)
     print(f"gene is {gene}")
-    fitness = get_fitness(gene, args)
-    print(f"fitness is {fitness}")
-    pxi, cumulative_pxi = get_pxi(fitness, args)
-    print(f"pxi = {pxi}\ncumulative pxi = {cumulative_pxi}")
-    return gene, cumulative_pxi
+
+    return gene
 
 
 def check_target(gene: dict, args, cnt):
@@ -167,14 +170,15 @@ def check_target(gene: dict, args, cnt):
 # def SGA(C, E, P0, M, end):
 def SGA():
     args = parse_args()
-    gene, cumulative_pxi = get_init(args)
+    gene = get_init(args)
     cnt = 1
     while not check_target(gene, args, cnt):
         print(f"Generation {cnt}")
-        gs = get_select(gene, cumulative_pxi)
+        gs = get_select(gene, args)
         gc = get_cross(gs, args)
         gene = get_mutation(gc, args)
         cnt += 1
+    return cnt
 
 
 if __name__ == "__main__":

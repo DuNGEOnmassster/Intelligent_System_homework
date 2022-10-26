@@ -86,7 +86,11 @@ def get_pxi(fitness: dict, args):
     return pxi, cumulative_pxi
 
 
-def get_select(gene: dict, cumulative_pxi: dict):
+def get_select(gene: dict, args):
+    fitness = get_fitness(gene, args)
+    print(f"fitness is {fitness}")
+    pxi, cumulative_pxi = get_pxi(fitness, args)
+    print(f"pxi = {pxi}\ncumulative pxi = {cumulative_pxi}")
     gs = cumulative_pxi.copy()
     cumu_name = [i for i in cumulative_pxi.keys()]
     cumu_list = [i for i in cumulative_pxi.values()]
@@ -149,11 +153,8 @@ def get_init(args, is_init=True, row_number=None):
     print(f"row number is {row_number}")
     gene = get_encode(row_number, args)
     print(f"gene is {gene}")
-    fitness = get_fitness(gene, args)
-    print(f"fitness is {fitness}")
-    pxi, cumulative_pxi = get_pxi(fitness, args)
-    print(f"pxi = {pxi}\ncumulative pxi = {cumulative_pxi}")
-    return gene, cumulative_pxi
+
+    return gene
 
 
 def check_target(gene: dict, args, cnt):
@@ -169,15 +170,20 @@ def check_target(gene: dict, args, cnt):
 # def SGA(C, E, P0, M, end):
 def SGA():
     args = parse_args()
-    gene, cumulative_pxi = get_init(args)
+    gene = get_init(args)
     cnt = 1
     while not check_target(gene, args, cnt):
         print(f"Generation {cnt}")
-        gs = get_select(gene, cumulative_pxi)
+        gs = get_select(gene, args)
         gc = get_cross(gs, args)
         gene = get_mutation(gc, args)
         cnt += 1
+    return cnt
 
 
 if __name__ == "__main__":
-    SGA()
+    count = []
+    epoch = 1000
+    for i in range(epoch):
+        count.append(SGA())
+    print(count)
