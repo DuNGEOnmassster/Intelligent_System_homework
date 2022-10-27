@@ -3,10 +3,8 @@ import argparse
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Solving Equations with Genetic Algorithms")
+    parser = argparse.ArgumentParser(description="Solving TPS with Genetic Algorithms")
     
-    parser.add_argument("--func", type=str ,default='pow(x,2)',
-                        help="eqution to be solved")
     parser.add_argument("--num", type=int, default=4,
                         help="population size")
     parser.add_argument("--binary_encode", type=bool, default=True,
@@ -28,7 +26,7 @@ def get_target(args):
     if args.binary_encode:
         return pow(2, args.encode_bits) - 1
     else:
-        return 31   # default target
+        return None   # default target
 
 
 def get_row_number(args):
