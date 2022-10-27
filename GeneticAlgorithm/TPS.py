@@ -1,10 +1,12 @@
 import random
 import argparse
-
+import numpy as np
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Solving TPS with Genetic Algorithms")
     
+    parser.add_argument("--citys", type=int, default=9,
+                        help="total num of citys")
     parser.add_argument("--num", type=int, default=4,
                         help="population size")
     parser.add_argument("--binary_encode", type=bool, default=True,
@@ -165,6 +167,11 @@ def check_target(gene: dict, args, cnt):
         return False
 
 
+def shuffle_set(a, b):
+    assert len(a) == len(b)
+    p = np.random.permutation(len(a))
+    return a[p], b[p]
+
 # def SGA(C, E, P0, M, end):
 def SGA():
     args = parse_args()
@@ -176,6 +183,11 @@ def SGA():
         gc = get_cross(gs, args)
         gene = get_mutation(gc, args)
         cnt += 1
+    a = np.array([i for i in range(1,6)])
+    b = np.array([i for i in range(2,7)])
+    print(f"a = {a}, b = {b}")
+    a,b = shuffle_set(a,b)
+    print(f"a = {a}, b = {b}")
     return cnt
 
 
