@@ -127,4 +127,4 @@ def process(start, target):
 
 if __name__ == "__main__":
     start,target = init()
-    process(start, target)
+    # process(start, target)
