@@ -65,7 +65,7 @@ def get_best_extend(extend_list):
     return goal
 
 
-def get_extend(now_node, close_list):
+def get_extend(now_node: number_Node, close_list):
     now_map = now_node.map.copy()
     extend_rules = {0:[1], 1:[0,2], 2:[1]}
     extend_list = []
@@ -89,9 +89,9 @@ def get_extend(now_node, close_list):
         print(f"extend node:\n{extend_node.map}")
 
         # if not in close list, add into close list and extend list
-        if extend_node.map not in close_list:
-            close_list.append(extend_node.map)
-            extend_list.append(extend_node)
+        # if extend_node.map.any() not in close_list:
+        #     close_list.append(extend_node.map)
+        #     extend_list.append(extend_node)
             
     return extend_list
     
@@ -127,4 +127,4 @@ def process(start, target):
 
 if __name__ == "__main__":
     start,target = init()
-    # process(start, target)
+    process(start, target)
