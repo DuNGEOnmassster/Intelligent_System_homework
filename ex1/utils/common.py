@@ -9,6 +9,16 @@ class number_Node:
     pre_map: list # pre map
 
 
+def select_min(opened, Fn):
+    """选择opened表中的最小的估价函数值对应的状态"""
+    fn_dict = {}  # 字典
+    for node in opened:
+        fn = Fn[node]  
+        fn_dict[node] = fn
+    min_node = min(fn_dict, key = fn_dict.get) # 获得字典fn_dict中value的最小值所对应的键
+    return min_node
+
+
 def reversenum(node):
     """计算状态对应的逆序数,奇偶性一致则有解"""
     Sum = 0
@@ -21,7 +31,16 @@ def reversenum(node):
     return Sum
 
 
-def a_star(start, goal, parent, Gn, Fn):
+def Hn(node, goal):
+    """h(n)函数，用于计算估价函数f(n)，这里的h(n)选择的是与目标状态相比错位的数目"""
+    hn = 0
+    for i in range(0,9):
+        if node[i] != goal[i]:
+            hn += 1
+    return hn
+
+
+def a_star(start, goal, parent, Gn, Fn, opened, closed):
     if start == goal:
         print("初始状态和目标状态一致！")
         
@@ -33,10 +52,10 @@ def a_star(start, goal, parent, Gn, Fn):
     else:
         parent[start] = -1                # 初始结点的父结点存储为-1
         Gn[start] = 0                     # 初始结点的g(n)为0
-        Fn[start] = Gn[start] + Hn(start)  # 计算初始结点的估价函数值 f(n)  =  g(n) + h(n)
+        Fn[start] = Gn[start] + Hn(start, goal)  # 计算初始结点的估价函数值 f(n)  =  g(n) + h(n)
 
         while opened:
-            current = select_min(opened)  # 选择估价函数值最小的状态
+            current = select_min(opened, Fn)  # 选择估价函数值最小的状态
             del Fn[current]              # 对代价清零
             opened.remove(current)       # 将要遍历的结点取出opened表
 
@@ -52,14 +71,14 @@ def a_star(start, goal, parent, Gn, Fn):
                     # 并求出对应的估价函数值
                     if node not in opened and node not in closed:
                         Gn[node] = Gn[current]+1
-                        Fn[node] = Gn[node]+Hn(node)
+                        Fn[node] = Gn[node]+Hn(node, goal)
                         parent[node] = current
                         opened.append(node)
                     else:
                         # 若子结点已经在opened表中，则判断估价函数值更小的一个路径
                         # 同时改变parent字典和Fn字典中的值
                         if node in opened:
-                            fn = Gn[current] + 1 + Hn(node)
+                            fn = Gn[current] + 1 + Hn(node, goal)
                             if fn < Fn[node]:
                                 Fn[node] = fn
                                 parent[node] = current

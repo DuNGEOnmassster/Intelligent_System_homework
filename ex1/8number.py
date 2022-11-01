@@ -145,4 +145,4 @@ if __name__ == "__main__":
     Gn = {}  # 初始结点到当前结点n的实际代价，即路径长度
     parent = {}  # 用来存储状态对应的父结点
     
-    result = a_star(get_string_map(start), get_string_map(target), parent, Gn, Fn)
+    result = a_star(get_string_map(start), get_string_map(target), parent, Gn, Fn, opened, closed)
