@@ -37,6 +37,18 @@ def get_target(args):
             return np.array(args.arr).reshape([3,3])
 
 
+def reversenum(map):
+    strmap = get_string_map(map)
+    Sum = 0
+    for i in range(1,9):
+        num = 0
+        for j in range(0,i):
+          if strmap[j]>strmap[i] and strmap[i] != '0':
+              num = num + 1
+        Sum += num
+    return Sum
+
+
 def get_string_map(map):
     num_list = [str(i) for i in range(9)]
     str_map = ''
@@ -107,6 +119,13 @@ def get_extend(now_node: number_Node, close_list):
     
 
 def process(start, target):
+    # validate solution exist or not
+    if (reversenum(start)%2) != (reversenum(target)%2):
+        print("search failed")
+        return None
+    else:
+        print("solution exist")
+
     # initialize list and node
     open_list = []
     close_list = []
@@ -136,13 +155,7 @@ def process(start, target):
 
 if __name__ == "__main__":
     start,target = init()
-    # process(start, target)
-    print(get_string_map(start))
-    print(get_string_map(target))
-    opened = [start]
-    closed = []
-    Fn = {}  # 状态对应的估价函数值 f(n)  =  g(n) + h(n)
-    Gn = {}  # 初始结点到当前结点n的实际代价，即路径长度
-    parent = {}  # 用来存储状态对应的父结点
-    
-    result = a_star(get_string_map(start), get_string_map(target), parent, Gn, Fn, opened, closed)
+    process(start, target)
+    # print(get_string_map(start))
+    # print(get_string_map(target))
+
