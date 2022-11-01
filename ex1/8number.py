@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-from utils.common import number_Node
+from utils.common import *
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Animal identify system")
@@ -11,7 +11,7 @@ def parse_args():
                         help="design the start 8 number map")
     parser.add_argument("--diy_target", default=False,
                         help="judge whether to diy target 8 number map or not, default with False")
-    parser.add_argument("--target", default=[0, 1, 2, 7, 8, 3, 6, 5, 4],
+    parser.add_argument("--target", default=[1, 5, 3, 2, 4, 6, 7, 0, 8],
                         help="design the start 8 number map")
 
     return parser.parse_args()
@@ -136,4 +136,13 @@ def process(start, target):
 
 if __name__ == "__main__":
     start,target = init()
-    process(start, target)
+    # process(start, target)
+    print(get_string_map(start))
+    print(get_string_map(target))
+    opened = [start]
+    closed = []
+    Fn = {}  # 状态对应的估价函数值 f(n)  =  g(n) + h(n)
+    Gn = {}  # 初始结点到当前结点n的实际代价，即路径长度
+    parent = {}  # 用来存储状态对应的父结点
+    
+    result = a_star(get_string_map(start), get_string_map(target), parent, Gn, Fn)
