@@ -120,14 +120,16 @@ def process(start, target):
         print("not empty")
         open_list.pop()
         extend_list = get_extend(pre_node, open_list)
+        print(f"extend_list:\n{extend_list}")
         new_node = get_best_extend(extend_list)
         if new_node == None:
             print("search failed")
         else:
             if new_node.g == 0:
                 print(f"achieve target!")
-                return new_node
+                break
             else:
+                pre_node = new_node
                 new_node.h = pre_node.h + 1
                 open_list.append(new_node)
         
