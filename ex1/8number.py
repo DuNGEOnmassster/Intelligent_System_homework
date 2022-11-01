@@ -99,10 +99,9 @@ def get_extend(now_node: number_Node, close_list):
 
         # if not in close list, add into close list and extend list
         extend_map = get_string_map(extend_node.map)
-        print(extend_map)
-        # if extend_map not in close_list:
-        #     close_list.append(extend_node.map)
-        #     extend_list.append(extend_node)
+        if extend_map not in close_list:
+            close_list.append(get_string_map(extend_node.map))
+            extend_list.append(extend_node)
             
     return extend_list
     
@@ -113,7 +112,7 @@ def process(start, target):
     close_list = []
     start_node = number_Node(start, 0, get_differ(start,target), None)
     open_list.append(start_node)
-    close_list.append(start_node.map.tolist())
+    close_list.append(get_string_map(start_node.map))
     pre_node = start_node
 
     # while open list not empty
@@ -129,7 +128,7 @@ def process(start, target):
                 print(f"achieve target!")
                 return new_node
             else:
-                new_node.f = pre_node.f + 1
+                new_node.h = pre_node.h + 1
                 open_list.append(new_node)
         
 
