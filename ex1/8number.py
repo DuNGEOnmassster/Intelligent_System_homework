@@ -37,6 +37,15 @@ def get_target(args):
             return np.array(args.arr).reshape([3,3])
 
 
+def get_string_map(map):
+    num_list = [str(i) for i in range(9)]
+    str_map = ''
+    for i in str(map):
+        if i in num_list:
+            str_map += i
+    return str_map
+
+
 def init():
     args = parse_args()
     start = get_start(args)
@@ -89,15 +98,14 @@ def get_extend(now_node: number_Node, close_list):
         print(f"extend node:\n{extend_node.map}")
 
         # if not in close list, add into close list and extend list
-        extend_map = extend_node.map.tolist()
+        extend_map = get_string_map(extend_node.map)
         print(extend_map)
-        if extend_map not in close_list:
-            close_list.append(extend_node.map)
-            extend_list.append(extend_node)
+        # if extend_map not in close_list:
+        #     close_list.append(extend_node.map)
+        #     extend_list.append(extend_node)
             
     return extend_list
     
-
 
 def process(start, target):
     # initialize list and node
@@ -124,8 +132,6 @@ def process(start, target):
                 new_node.f = pre_node.f + 1
                 open_list.append(new_node)
         
-
-
 
 if __name__ == "__main__":
     start,target = init()
