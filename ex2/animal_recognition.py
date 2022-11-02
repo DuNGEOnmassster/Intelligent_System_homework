@@ -1,7 +1,9 @@
 import os
-from itertools import combinations
-from rules import init_rules, Point
 import argparse
+from itertools import combinations
+
+from utils.rules import init_rules, Point
+from utils.check_rules import check_extend_rules, check_origin_rules
 
 
 def parse_args():
@@ -21,12 +23,12 @@ def load_file(txt_or_txt_file):
     if os.path.exists(txt_or_txt_file):
         file = open(txt_or_txt_file, 'r')
         readfile = file.read()
-        is_file = True
+        print("load script from file")
     else:
         readfile = txt_or_txt_file
-        is_file = False
+        print("load script from text")
     
-    return readfile, is_file
+    return readfile
 
 
 def value2key(dict, value):
@@ -36,8 +38,12 @@ def value2key(dict, value):
 def get_test_pattern(text, args):
     if args.extend:
         print("Use extend rules")
-        rules_text,_ = load_file(args.extend_rules)
-        datasets, emissions, targets = get_rule_pattern(rules_text)
+        if check_extend_rules(args.extend_rules):
+            rules_text = load_file(args.extend_rules)
+            datasets, emissions, targets = get_rule_pattern(rules_text)
+        else:
+            print("Illegal extend rules!")
+            return None
     else:
         datasets, emissions, targets = init_rules()
     
@@ -115,7 +121,7 @@ def get_combinations(conditions):
 def search(conditions, args):
     if args.extend:
         print("Search in extend rules")
-        rules_text,_ = load_file(args.extend_rules)
+        rules_text = load_file(args.extend_rules)
         datasets, emissions, targets = get_rule_pattern(rules_text)
     else:
         datasets, emissions, targets = init_rules()
@@ -152,10 +158,12 @@ def search(conditions, args):
 
 def find_rules():
     args = parse_args()
-    text, is_file = load_file(args.test)
-    print(f"It is {is_file} that this is a file")
-    conditions = get_test_pattern(text, args)
-    target = search(conditions, args)
+    if check_origin_rules():
+        text = load_file(args.test)
+        conditions = get_test_pattern(text, args)
+        target = search(conditions, args)
+    else:
+        print("Illegal origin rules!")
 
 
 if __name__ == "__main__":

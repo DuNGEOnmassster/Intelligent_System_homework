@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-from utils.common import *
+from utils.common import number_Node
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Animal identify system")
@@ -108,6 +108,7 @@ def get_extend(now_node: number_Node, close_list):
         extend_node.map[row][col] = extend_node.map[extend_point[0]][extend_point[1]]
         extend_node.map[extend_point[0]][extend_point[1]] = 0
         print(f"extend node:\n{extend_node.map}")
+        extend_node.g = get_differ(extend_node.map, target)
 
         # if not in close list, add into close list and extend list
         extend_map = get_string_map(extend_node.map)
