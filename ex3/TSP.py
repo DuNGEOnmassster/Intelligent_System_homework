@@ -1,6 +1,7 @@
 import random
 import argparse
 import numpy as np
+import math
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Solving TSP with Genetic Algorithms")
@@ -61,13 +62,13 @@ def get_row_number(args):
 def get_encode(row_number: dict, args):
     gene = row_number.copy()
     for item in gene.keys():
-        if args.binary_encode:
+        if args.binary_encode:  # use binary encode for other problem
             gene[item] = bin(gene[item])   
             if len(gene[item]) < args.encode_bits + 2:
                 zero_filling = "0" * (args.encode_bits + 2 - len(gene[item]))  
                 gene[item] = "0b"+zero_filling+gene[item][2:] 
                 print(f"warning! new is {gene[item]}")   
-        else:
+        else:  # binary encode is useless in TSP
             break
     return gene
 
@@ -75,20 +76,28 @@ def get_encode(row_number: dict, args):
 def get_decode(gene: dict, args):
     row_number = gene.copy()
     for item in row_number.keys():
-        if args.binary_encode:
+        if args.binary_encode:  # use binary decode for other problem
             row_number[item] = int(gene[item], 2)
-        else:
+        else:  # binary decode is useless in TSP
             break
     return row_number
 
 
+def get_distance(c1, c2):
+    l1 = c1[1]-c2[1]
+    l2 = c1[0]-c2[0]
+    distance = math.sqrt(l1**2 + l2**2)
+    return distance
+
+
 def get_fitness(gene: dict, args):
     fitness = gene.copy()
-    for item in fitness.keys():
-        if args.binary_encode:
-            fitness[item] = pow(int(fitness[item], 2), 2)
-        else:
-            fitness[item] = pow(fitness[item],2)
+    print(f"fitness is {fitness}")
+    # for item in fitness.keys():
+    #     if args.binary_encode:
+    #         fitness[item] = pow(int(fitness[item], 2), 2)
+    #     else:
+    #         fitness[item] = pow(fitness[item],2)
     return fitness
 
 
@@ -178,15 +187,18 @@ def get_init(args, is_init=True, row_number=None):
 
 def check_target(gene: dict, args, cnt):
     gene_number = [i for i in get_decode(gene, args).values()]
-    target = get_target(args)
-    if cnt > args.max_generation:
-        print(f"Reach maximum generation")
-        return True
-    if target in gene_number:
-        print(f"Find target :{target} in generation {cnt}")
-        return True
-    else:
-        return False
+    print(f"gene_number is {gene_number}")
+    gene_fitness = get_fitness(gene_number, args)
+    print(f"gene_fitness is {gene_fitness}")
+    # target = get_target(args)
+    # if cnt > args.max_generation:
+    #     print(f"Reach maximum generation")
+    #     return True
+    # if target in gene_number:
+    #     print(f"Find target :{target} in generation {cnt}")
+    #     return True
+    # else:
+    #     return False
 
 
 # def SGA(C, E, P0, M, end):
@@ -194,6 +206,7 @@ def SGA():
     args = parse_args()
     gene = get_init(args)
     cnt = 1
+    check_target(gene, args, cnt)
     # while not check_target(gene, args, cnt):
     #     print(f"Generation {cnt}")
     #     gs = get_select(gene, args)
