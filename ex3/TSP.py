@@ -3,39 +3,58 @@ import argparse
 import numpy as np
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Solving TPS with Genetic Algorithms")
+    parser = argparse.ArgumentParser(description="Solving TSP with Genetic Algorithms")
     
-    parser.add_argument("--citys", type=int, default=9,
+    parser.add_argument("--citys", type=int, default=10,
                         help="total num of citys")
+    parser.add_argument("--target",type=float, default=166.541336,
+                        help="The minimum answer referenced from report")
     parser.add_argument("--num", type=int, default=4,
                         help="population size")
-    parser.add_argument("--binary_encode", type=bool, default=True,
-                        help="whether use binary encode, default with True")
+    parser.add_argument("--binary_encode", type=bool, default=False,
+                        help="whether use binary encode, TSP default with False")
 
-    parser.add_argument("--encode_bits", type=int, default=5,
-                        help="declear the length of encode bits")
+    parser.add_argument("--max_generation", type=int, default=500,
+                        help="declare the maximum of generation")
+    parser.add_argument("--encode_bits", type=int, default=4,
+                        help="declare the length of encode bits")
     parser.add_argument("--max_cross_bits", type=int, default=3,
-                        help="declear the maximum of changing bits in a crossing epoch")
+                        help="declare the maximum of changing bits in a crossing epoch")
     parser.add_argument("--single_mutation_bits", type=int, default=1,
-                        help="declear the maximum of mutation bits in a single gene")
+                        help="declare the maximum of mutation bits in a single gene")
     parser.add_argument("--max_mutation_bits", type=int, default=3,
-                        help="declear the maximum of total mutation bits in a mutation epoch")
+                        help="declare the maximum of total mutation bits in a mutation epoch")
 
     return parser.parse_args()
 
 
+def get_city_map():
+    map_dict = {0: (87, 7),
+                1: (91, 38),
+                2: (83, 46),
+                3: (71, 44),
+                4: (64, 60),
+                5: (68, 58),
+                6: (83, 69),
+                7: (87, 76),
+                8: (74, 78),
+                9: (71, 71)}
+    return map_dict
+
 def get_target(args):
-    if args.binary_encode:
-        return pow(2, args.encode_bits) - 1
-    else:
-        return None   # default target
+    return args.target
+
+
+def shuffle_set(a):
+    p = np.random.permutation(len(a))
+    return a[p]
 
 
 def get_row_number(args):
     row_number = {}
     for i in range(args.num):
         key = "s" + str(i+1)
-        row_number[key] = random.randint(1, pow(2, args.encode_bits)-1)
+        row_number[key] = shuffle_set(np.array([i for i in range(args.citys)]))
     return row_number
 
 
@@ -160,6 +179,9 @@ def get_init(args, is_init=True, row_number=None):
 def check_target(gene: dict, args, cnt):
     gene_number = [i for i in get_decode(gene, args).values()]
     target = get_target(args)
+    if cnt > args.max_generation:
+        print(f"Reach maximum generation")
+        return True
     if target in gene_number:
         print(f"Find target :{target} in generation {cnt}")
         return True
@@ -167,28 +189,23 @@ def check_target(gene: dict, args, cnt):
         return False
 
 
-def shuffle_set(a, b):
-    assert len(a) == len(b)
-    p = np.random.permutation(len(a))
-    return a[p], b[p]
-
 # def SGA(C, E, P0, M, end):
 def SGA():
     args = parse_args()
     gene = get_init(args)
     cnt = 1
-    while not check_target(gene, args, cnt):
-        print(f"Generation {cnt}")
-        gs = get_select(gene, args)
-        gc = get_cross(gs, args)
-        gene = get_mutation(gc, args)
-        cnt += 1
-    a = np.array([i for i in range(1,6)])
-    b = np.array([i for i in range(2,7)])
-    print(f"a = {a}, b = {b}")
-    a,b = shuffle_set(a,b)
-    print(f"a = {a}, b = {b}")
-    return cnt
+    # while not check_target(gene, args, cnt):
+    #     print(f"Generation {cnt}")
+    #     gs = get_select(gene, args)
+    #     gc = get_cross(gs, args)
+    #     gene = get_mutation(gc, args)
+    #     cnt += 1
+    # a = np.array([i for i in range(1,6)])
+    # b = np.array([i for i in range(2,7)])
+    # print(f"a = {a}, b = {b}")
+    # a = shuffle_set(a)
+    # print(f"a = {a}, b = {b}")
+    # return cnt
 
 
 if __name__ == "__main__":
