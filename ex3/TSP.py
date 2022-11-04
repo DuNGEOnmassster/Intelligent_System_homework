@@ -15,12 +15,10 @@ def parse_args():
     parser.add_argument("--binary_encode", type=bool, default=False,
                         help="whether use binary encode, TSP default with False")
 
-    parser.add_argument("--max_generation", type=int, default=1000,
+    parser.add_argument("--max_generation", type=int, default=500,
                         help="declare the maximum of generation")
-    parser.add_argument("--encode_bits", type=int, default=4,
-                        help="declare the length of encode bits")
-    parser.add_argument("--max_cross_bits", type=int, default=3,
-                        help="declare the maximum of changing bits in a crossing epoch")
+    parser.add_argument("--max_cross_citys", type=int, default=3,
+                        help="declare the maximum of changing citys in each crossing group")
     parser.add_argument("--single_mutation_bits", type=int, default=1,
                         help="declare the maximum of mutation bits in a single gene")
     parser.add_argument("--max_mutation_bits", type=int, default=3,
@@ -155,13 +153,22 @@ def get_cross(gs: dict, args):
     print(f"new_number = {new_number}")
     print(f"cross_group = {cross_group}")
     for group in cross_group:
-        cross_bits = random.randint(1, args.max_cross_bits)
-        # print(f"cross bits = {cross_bits}, cross step = {group[0][-cross_bits:]}, row step = {group[0][len(group[0])-cross_bits:]}")
-        gc[gs_keys[cnt*2]] = group[0][:len(group[0])-cross_bits] + group[1][-cross_bits:]
-        gc[gs_keys[cnt*2 + 1]] = group[1][:len(group[1])-cross_bits] + group[0][-cross_bits:]
-        cnt += 1
-    print(f"gc = {gc}")
-    print(f"new number after crossing: {get_decode(gc, args)}")
+        cross_citys = random.randint(1, args.max_cross_citys)
+        cross_site = random.randint(0,args.citys-cross_citys-1)
+        city_set = [i for i in group[0][cross_site:cross_site+cross_citys]]
+        print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set is {city_set}")
+        crossed_site = set()
+        for i in city_set:
+            crossed_site.add(group[1].tolist().index(i))
+        print(f"In group1:{group[1]}, crossed site is {crossed_site}")
+        # for i in crossed_site:
+        #     group[1][i] = city_set[cnt]
+        #     cnt += 1
+    #     gc[gs_keys[cnt*2]] = group[0][:len(group[0])-cross_bits] + group[1][-cross_bits:]
+    #     gc[gs_keys[cnt*2 + 1]] = group[1][:len(group[1])-cross_bits] + group[0][-cross_bits:]
+    #     cnt += 1
+    # print(f"gc = {gc}")
+    # print(f"new number after crossing: {get_decode(gc, args)}")
     # return new gene: dict
     return gc
 
