@@ -92,7 +92,16 @@ def get_distance(c1, c2):
 
 def get_fitness(gene: dict, args):
     fitness = gene.copy()
+    city_map = get_city_map()
     print(f"fitness is {fitness}")
+    for item in fitness:
+        ada_sum = 0
+        # for i in range(len(item)):
+        #     c1 = city_map[gene[i]]
+        #     c2 = city_map[gene[i+1]] if i+1 < len(item) else city_map[gene[0]]
+        #     distance = get_distance(c1, c2)
+        #     ada_sum += distance
+        print(ada_sum)
     # for item in fitness.keys():
     #     if args.binary_encode:
     #         fitness[item] = pow(int(fitness[item], 2), 2)
