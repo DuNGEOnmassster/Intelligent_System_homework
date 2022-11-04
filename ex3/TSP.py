@@ -195,15 +195,16 @@ def get_init(args, is_init=True, row_number=None):
 def check_target(gene: dict, args, cnt):
     gene_fitness = get_fitness(gene, args)
     print(f"gene_fitness is {gene_fitness}")
-    # target = get_target(args)
-    # if cnt > args.max_generation:
-    #     print(f"Reach maximum generation")
-    #     return True
-    # if target in gene_number:
-    #     print(f"Find target :{target} in generation {cnt}")
-    #     return True
-    # else:
-    #     return False
+    target = get_target(args)
+    if cnt > args.max_generation:
+        print(f"Reach maximum generation")
+        return True
+    for fit in gene_fitness.values():     
+        if target >= float(fit):
+            print(f"Find target :{fit} in generation {cnt}")
+            return True
+    else:
+        return False
 
 
 # def SGA(C, E, P0, M, end):
