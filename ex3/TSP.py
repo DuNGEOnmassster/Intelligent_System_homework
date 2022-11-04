@@ -147,7 +147,6 @@ def get_select(gene: dict, args):
 def get_cross(gs: dict, args):
     gc = gs.copy()
     gs_keys = [i for i in gs.keys()]
-    cnt = 0
     cross_group = [[gs[gs_keys[2*i]], gs[gs_keys[2*i+1]]] for i in range(len(gs)//2)]
     new_number = get_decode(gs, args)
     print(f"new_number = {new_number}")
@@ -157,13 +156,18 @@ def get_cross(gs: dict, args):
         cross_site = random.randint(0,args.citys-cross_citys-1)
         city_set = [i for i in group[0][cross_site:cross_site+cross_citys]]
         print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set is {city_set}")
-        crossed_site = set()
+        crossed_sites = []
         for i in city_set:
-            crossed_site.add(group[1].tolist().index(i))
-        print(f"In group1:{group[1]}, crossed site is {crossed_site}")
-        # for i in crossed_site:
-        #     group[1][i] = city_set[cnt]
-        #     cnt += 1
+            crossed_sites.append(group[1].tolist().index(i))
+        print(f"In group1:{group[1]}, crossed site is {sorted(crossed_sites)}")
+        cnt = 0
+        for i in sorted(crossed_sites):
+            group[0][cross_site+cnt] = group[1][i]
+        cnt = 0
+        for i in sorted(crossed_sites):
+            group[1][i] = city_set[cnt]
+            cnt += 1
+        
     #     gc[gs_keys[cnt*2]] = group[0][:len(group[0])-cross_bits] + group[1][-cross_bits:]
     #     gc[gs_keys[cnt*2 + 1]] = group[1][:len(group[1])-cross_bits] + group[0][-cross_bits:]
     #     cnt += 1
@@ -233,6 +237,7 @@ def SGA():
         gc = get_cross(gs, args)
         # gene = get_mutation(gc, args)
         cnt += 1
+        gene = gc
     # a = np.array([i for i in range(1,6)])
     # b = np.array([i for i in range(2,7)])
     # print(f"a = {a}, b = {b}")
