@@ -15,7 +15,7 @@ def parse_args():
     parser.add_argument("--binary_encode", type=bool, default=False,
                         help="whether use binary encode, TSP default with False")
 
-    parser.add_argument("--max_generation", type=int, default=500,
+    parser.add_argument("--max_generation", type=int, default=1000,
                         help="declare the maximum of generation")
     parser.add_argument("--encode_bits", type=int, default=4,
                         help="declare the length of encode bits")
@@ -109,7 +109,13 @@ def get_fitness(gene: dict, args):
 
 
 def get_pxi(fitness: dict, args):
+    cnt = 0
+    fitness_name = [i for i in fitness.keys()]
+    for item in fitness.values():
+        fitness[fitness_name[cnt]] = 1/item
+        cnt += 1
     sum_fitness = sum(fitness.values())
+    # print(f"new fitness is {fitness}\nsum fitness is {sum_fitness}")
     pxi = {}
     cumulative_pxi = {}
     cnt = 0
@@ -135,6 +141,7 @@ def get_select(gene: dict, args):
         while rid > cumu_list[cupxi]:
             cupxi += 1
         gs[item] = gene[cumu_name[cupxi]]
+    print(f"gs = {gs}")
     # return new gene: dict
     return gs
 
@@ -145,7 +152,6 @@ def get_cross(gs: dict, args):
     cnt = 0
     cross_group = [[gs[gs_keys[2*i]], gs[gs_keys[2*i+1]]] for i in range(len(gs)//2)]
     new_number = get_decode(gs, args)
-    print(f"gs = {gs}")
     print(f"new_number = {new_number}")
     print(f"cross_group = {cross_group}")
     for group in cross_group:
@@ -194,7 +200,7 @@ def get_init(args, is_init=True, row_number=None):
 
 def check_target(gene: dict, args, cnt):
     gene_fitness = get_fitness(gene, args)
-    print(f"gene_fitness is {gene_fitness}")
+    # print(f"gene_fitness is {gene_fitness}")
     target = get_target(args)
     if cnt > args.max_generation:
         print(f"Reach maximum generation")
@@ -212,13 +218,14 @@ def SGA():
     args = parse_args()
     gene = get_init(args)
     cnt = 1
-    check_target(gene, args, cnt)
-    # while not check_target(gene, args, cnt):
-    #     print(f"Generation {cnt}")
-    #     gs = get_select(gene, args)
-    #     gc = get_cross(gs, args)
-    #     gene = get_mutation(gc, args)
-    #     cnt += 1
+    # check_target(gene, args, cnt)
+    while not check_target(gene, args, cnt):
+        print(f"Generation {cnt}")
+        gs = get_select(gene, args)
+        print(f"gs = {gs}")
+        gc = get_cross(gs, args)
+        # gene = get_mutation(gc, args)
+        cnt += 1
     # a = np.array([i for i in range(1,6)])
     # b = np.array([i for i in range(2,7)])
     # print(f"a = {a}, b = {b}")
