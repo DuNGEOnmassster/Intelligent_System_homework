@@ -92,21 +92,19 @@ def get_distance(c1, c2):
 
 def get_fitness(gene: dict, args):
     fitness = gene.copy()
+    fitness_name = [i for i in fitness.keys()]
+    gene_number = [i for i in get_decode(gene, args).values()]
     city_map = get_city_map()
-    print(f"fitness is {fitness}")
-    for item in fitness:
+    cnt = 0
+    for item in gene_number:
         ada_sum = 0
-        # for i in range(len(item)):
-        #     c1 = city_map[gene[i]]
-        #     c2 = city_map[gene[i+1]] if i+1 < len(item) else city_map[gene[0]]
-        #     distance = get_distance(c1, c2)
-        #     ada_sum += distance
-        print(ada_sum)
-    # for item in fitness.keys():
-    #     if args.binary_encode:
-    #         fitness[item] = pow(int(fitness[item], 2), 2)
-    #     else:
-    #         fitness[item] = pow(fitness[item],2)
+        for i in range(len(item)):
+            c1 = city_map[item[i]]
+            c2 = city_map[item[i+1]] if i+1 < len(item) else city_map[item[0]]
+            distance = get_distance(c1, c2)
+            ada_sum += distance
+        fitness[fitness_name[cnt]] = ada_sum
+        cnt += 1
     return fitness
 
 
@@ -195,9 +193,7 @@ def get_init(args, is_init=True, row_number=None):
 
 
 def check_target(gene: dict, args, cnt):
-    gene_number = [i for i in get_decode(gene, args).values()]
-    print(f"gene_number is {gene_number}")
-    gene_fitness = get_fitness(gene_number, args)
+    gene_fitness = get_fitness(gene, args)
     print(f"gene_fitness is {gene_fitness}")
     # target = get_target(args)
     # if cnt > args.max_generation:
