@@ -151,22 +151,27 @@ def get_cross(gs: dict, args):
     new_number = get_decode(gs, args)
     print(f"new_number = {new_number}")
     print(f"cross_group = {cross_group}")
-    for group in cross_group:
-        cross_citys = random.randint(1, args.max_cross_citys)
-        cross_site = random.randint(0,args.citys-cross_citys-1)
-        city_set = [i for i in group[0][cross_site:cross_site+cross_citys]]
-        print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set is {city_set}")
-        crossed_sites = []
-        for i in city_set:
-            crossed_sites.append(group[1].tolist().index(i))
-        print(f"In group1:{group[1]}, crossed site is {sorted(crossed_sites)}")
-        cnt = 0
-        for i in sorted(crossed_sites):
-            group[0][cross_site+cnt] = group[1][i]
-        cnt = 0
-        for i in sorted(crossed_sites):
-            group[1][i] = city_set[cnt]
-            cnt += 1
+    seed = np.random.randint(0, args.citys, 2)
+    seed.sort()
+    start_seed = seed[0]
+    end_seed = seed[1]
+    print(f"start seed is {start_seed}, end seed is {end_seed}")
+    # for group in cross_group:
+    #     cross_citys = random.randint(1, args.max_cross_citys)
+    #     cross_site = random.randint(0,args.citys-cross_citys-1)
+    #     city_set = [i for i in group[0][cross_site:cross_site+cross_citys]]
+    #     print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set is {city_set}")
+    #     crossed_sites = []
+    #     for i in city_set:
+    #         crossed_sites.append(group[1].tolist().index(i))
+    #     print(f"In group1:{group[1]}, crossed site is {sorted(crossed_sites)}")
+    #     cnt = 0
+    #     for i in sorted(crossed_sites):
+    #         group[0][cross_site+cnt] = group[1][i]
+    #     cnt = 0
+    #     for i in sorted(crossed_sites):
+    #         group[1][i] = city_set[cnt]
+    #         cnt += 1
         
     #     gc[gs_keys[cnt*2]] = group[0][:len(group[0])-cross_bits] + group[1][-cross_bits:]
     #     gc[gs_keys[cnt*2 + 1]] = group[1][:len(group[1])-cross_bits] + group[0][-cross_bits:]
