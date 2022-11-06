@@ -148,10 +148,9 @@ def get_cross(gs: dict, args):
     gc = gs.copy()
     gs_keys = [i for i in gs.keys()]
     cross_group = [[gs[gs_keys[2*i]], gs[gs_keys[2*i+1]]] for i in range(len(gs)//2)]
-    new_number = get_decode(gs, args)
-    print(f"new_number = {new_number}")
     print(f"cross_group = {cross_group}")
     for group in cross_group:
+        cnt = 0
         # get cross citys in group0
         cross_citys = random.randint(1, args.max_cross_citys)
         cross_site = random.randint(0,args.citys-cross_citys-1)
@@ -167,25 +166,18 @@ def get_cross(gs: dict, args):
         print(f"In group1:{group[1]}, crossed site is {(crossed_sites)}, city set1 is {city_set1}")
         # change the order of selected citys bewteen group0 and group1
         gcc1 = group[0][:cross_site].tolist() + city_set1 + group[0][cross_site+cross_citys:].tolist()
-        print(gcc1)
         gcc2 = group[1].tolist()
-        cnt = 0
+        ccnt = 0
         for i in crossed_sites:
-            gcc2[i] = city_set0[cnt]
-            cnt += 1
-        print(gcc2)
-    #     cnt = 0
-    #     for i in sorted(crossed_sites):
-    #         group[0][cross_site+cnt] = group[1][i]
-    #     cnt = 0
-    #     for i in sorted(crossed_sites):
-    #         group[1][i] = city_set[cnt]
-    #         cnt += 1
-        
-    #     gc[gs_keys[cnt*2]] = group[0][:len(group[0])-cross_bits] + group[1][-cross_bits:]
-    #     gc[gs_keys[cnt*2 + 1]] = group[1][:len(group[1])-cross_bits] + group[0][-cross_bits:]
-    #     cnt += 1
-    # print(f"gc = {gc}")
+            gcc2[i] = city_set0[ccnt]
+            ccnt += 1
+        print(f"gcc1 is {gcc1}")
+        print(f"gcc2 is {gcc2}")
+        # restore in gc with numpy array dtype
+        gc[gs_keys[cnt*2]] = np.array(gcc1)
+        gc[gs_keys[cnt*2 + 1]] = np.array(gcc2)
+        cnt += 1
+    print(f"gc = {gc}")
     # print(f"new number after crossing: {get_decode(gc, args)}")
     # return new gene: dict
     return gc
