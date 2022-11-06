@@ -166,8 +166,14 @@ def get_cross(gs: dict, args):
                 crossed_sites.append(group[1].tolist().index(i))
         print(f"In group1:{group[1]}, crossed site is {(crossed_sites)}, city set1 is {city_set1}")
         # change the order of selected citys bewteen group0 and group1
-
-
+        gcc1 = group[0][:cross_site].tolist() + city_set1 + group[0][cross_site+cross_citys:].tolist()
+        print(gcc1)
+        gcc2 = group[1].tolist()
+        cnt = 0
+        for i in crossed_sites:
+            gcc2[i] = city_set0[cnt]
+            cnt += 1
+        print(gcc2)
     #     cnt = 0
     #     for i in sorted(crossed_sites):
     #         group[0][cross_site+cnt] = group[1][i]
