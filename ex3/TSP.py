@@ -154,12 +154,17 @@ def get_cross(gs: dict, args):
     for group in cross_group:
         cross_citys = random.randint(1, args.max_cross_citys)
         cross_site = random.randint(0,args.citys-cross_citys-1)
-        city_set = [i for i in group[0][cross_site:cross_site+cross_citys]]
-        print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set is {city_set}")
-    #     crossed_sites = []
-    #     for i in city_set:
-    #         crossed_sites.append(group[1].tolist().index(i))
-    #     print(f"In group1:{group[1]}, crossed site is {sorted(crossed_sites)}")
+        city_set0 = [i for i in group[0][cross_site:cross_site+cross_citys]]
+        print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set0 is {city_set0}")
+        crossed_sites = []
+        city_set1 = []
+        for i in group[1]:
+            if i in city_set0:
+                city_set1.append(i)
+                crossed_sites.append(group[1].tolist().index(i))
+            # city_set1.append(i)
+        print(f"In group1:{group[1]}, crossed site is {(crossed_sites)}, city set1 is {city_set1}")
+
     #     cnt = 0
     #     for i in sorted(crossed_sites):
     #         group[0][cross_site+cnt] = group[1][i]
