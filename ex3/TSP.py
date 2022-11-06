@@ -151,16 +151,11 @@ def get_cross(gs: dict, args):
     new_number = get_decode(gs, args)
     print(f"new_number = {new_number}")
     print(f"cross_group = {cross_group}")
-    seed = np.random.randint(0, args.citys, 2)
-    seed.sort()
-    start_seed = seed[0]
-    end_seed = seed[1]
-    print(f"start seed is {start_seed}, end seed is {end_seed}")
-    # for group in cross_group:
-    #     cross_citys = random.randint(1, args.max_cross_citys)
-    #     cross_site = random.randint(0,args.citys-cross_citys-1)
-    #     city_set = [i for i in group[0][cross_site:cross_site+cross_citys]]
-    #     print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set is {city_set}")
+    for group in cross_group:
+        cross_citys = random.randint(1, args.max_cross_citys)
+        cross_site = random.randint(0,args.citys-cross_citys-1)
+        city_set = [i for i in group[0][cross_site:cross_site+cross_citys]]
+        print(f"In group0:{group[0]}, cross num is {cross_citys}, cross site is {cross_site}, city set is {city_set}")
     #     crossed_sites = []
     #     for i in city_set:
     #         crossed_sites.append(group[1].tolist().index(i))
@@ -242,7 +237,6 @@ def SGA():
         gc = get_cross(gs, args)
         # gene = get_mutation(gc, args)
         cnt += 1
-        gene = gc
     # a = np.array([i for i in range(1,6)])
     # b = np.array([i for i in range(2,7)])
     # print(f"a = {a}, b = {b}")
