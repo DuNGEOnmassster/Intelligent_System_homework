@@ -95,6 +95,7 @@ def get_fitness(gene: dict, args):
     city_map = get_city_map()
     cnt = 0
     for item in gene_number:
+        print(f"---------item is {item.tolist()}")
         ada_sum = 0
         for i in range(len(item)):
             c1 = city_map[item[i]]
@@ -219,11 +220,14 @@ def get_init(args, is_init=True, row_number=None):
 
 def check_target(gene: dict, args, cnt):
     gene_fitness = get_fitness(gene, args)
-    # print(f"gene_fitness is {gene_fitness}")
+    print(f"in check gene_fitness is {gene_fitness}")
     target = get_target(args)
     if cnt > args.max_generation:
         print(f"Reach maximum generation")
         return True
+    # if np.array([0, 3, 5, 4, 9, 8, 7, 6, 2, 1]).all() in gene.values():
+    #     print("Find [0, 3, 5, 4, 9, 8, 7, 6, 2, 1]")
+    #     return True
     for fit in gene_fitness.values():     
         if target >= float(fit):
             print(f"Find target :{fit} in generation {cnt}")
@@ -243,7 +247,7 @@ def SGA():
         gs = get_select(gene, args)
         print(f"gs = {gs}")
         gc = get_cross(gs, args)
-        gm = get_mutation(gc, args)
+        gene = get_mutation(gc, args)
         # gene = get_mutation(gc, args)
         cnt += 1
     # a = np.array([i for i in range(1,6)])
