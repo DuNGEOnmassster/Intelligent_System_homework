@@ -19,7 +19,7 @@ def parse_args():
                         help="declare the maximum of generation")
     parser.add_argument("--max_cross_citys", type=int, default=3,
                         help="declare the maximum of changing citys in each crossing group")
-    parser.add_argument("--single_mutation_citys", type=int, default=4,
+    parser.add_argument("--single_mutation_citys", type=int, default=3,
                         help="declare the maximum of mutation citys in a single gene")
     parser.add_argument("--max_mutation_genes", type=int, default=4,
                         help="declare the maximum of total mutation genes in a mutation epoch")
@@ -195,18 +195,18 @@ def get_mutation(gc: dict, args):
     for round in range(args.max_mutation_genes):
         print(f"In mutation round: {round+1}")
         lucky_number = random.randint(0, args.num-1)
-        lucky_mutaion_num = random.randint(1, args.single_mutation_citys)
-        print(f"lucky number is{lucky_number}, lucky mutation number is {lucky_mutaion_num}")
-    #     while 1:
-    #         if gc_mutation_count[gc_keys[lucky_number]] < args.single_mutation_bits:
-    #             gene_temp = gm[gc_keys[lucky_number]]
-    #             print(f"lucky number = {lucky_number}, lucky gene = {gene_temp}, lucky bit = {lucky_bit} \
-    #                 {gm[gc_keys[lucky_number]][-lucky_bit]}, {int(gm[gc_keys[lucky_number]][-lucky_bit])^1}")
-    #             gm[gc_keys[lucky_number]] = gene_temp[:(7-lucky_bit)] + str(int(gm[gc_keys[lucky_number]][-lucky_bit])^1) + gene_temp[(7-lucky_bit+1):]
-    #             gc_mutation_count[gc_keys[lucky_number]] += 1
-    #             break
-    #         else:
-    #             lucky_number = (lucky_number + 1) % args.num
+        lucky_citys = random.sample([i for i in range(args.citys)], 2)
+        print(f"lucky number is{lucky_number}, lucky mutation number is {lucky_citys}")
+        while 1:
+            if gc_mutation_count[gc_keys[lucky_number]] < args.single_mutation_citys:
+                # gene_temp = gm[gc_keys[lucky_number]]
+                # print(f"lucky number = {lucky_number}, lucky gene = {gene_temp}, lucky bit = {lucky_bit} \
+                #     {gm[gc_keys[lucky_number]][-lucky_bit]}, {int(gm[gc_keys[lucky_number]][-lucky_bit])^1}")
+                # gm[gc_keys[lucky_number]] = gene_temp[:(7-lucky_bit)] + str(int(gm[gc_keys[lucky_number]][-lucky_bit])^1) + gene_temp[(7-lucky_bit+1):]
+                gc_mutation_count[gc_keys[lucky_number]] += 1
+                break
+            else:
+                lucky_number = (lucky_number + 1) % args.num
     print(f"gm = {gm}")
     # return new gene: dict
     return gm
