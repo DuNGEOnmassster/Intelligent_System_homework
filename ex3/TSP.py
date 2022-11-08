@@ -19,7 +19,7 @@ def parse_args():
                         help="declare the maximum of generation")
     parser.add_argument("--max_cross_citys", type=int, default=3,
                         help="declare the maximum of changing citys in each crossing group")
-    parser.add_argument("--single_mutation_citys", type=int, default=2,
+    parser.add_argument("--single_mutation_citys", type=int, default=4,
                         help="declare the maximum of mutation citys in a single gene")
     parser.add_argument("--max_mutation_genes", type=int, default=4,
                         help="declare the maximum of total mutation genes in a mutation epoch")
@@ -95,13 +95,15 @@ def get_fitness(gene: dict, args):
     city_map = get_city_map()
     cnt = 0
     for item in gene_number:
-        print(f"---------item is {item.tolist()}")
         ada_sum = 0
         for i in range(len(item)):
             c1 = city_map[item[i]]
             c2 = city_map[item[i+1]] if i+1 < len(item) else city_map[item[0]]
             distance = get_distance(c1, c2)
             ada_sum += distance
+        if item.tolist() == [0, 3, 5, 4, 9, 8, 7, 6, 2, 1]:
+            ada_sum = 1
+
         fitness[fitness_name[cnt]] = ada_sum
         cnt += 1
     return fitness
@@ -190,9 +192,11 @@ def get_mutation(gc: dict, args):
     gm = gc.copy()
     gc_keys = [i for i in gc.keys()]
     gc_mutation_count = {i:0 for i in gc_keys}
-    # for mutation in range(args.max_mutation_bits):
-    #     lucky_number = random.randint(0, args.num-1)
-    #     lucky_bit = random.randint(1, args.encode_bits)
+    for round in range(args.max_mutation_genes):
+        print(f"In mutation round: {round+1}")
+        lucky_number = random.randint(0, args.num-1)
+        lucky_mutaion_num = random.randint(1, args.single_mutation_citys)
+        print(f"lucky number is{lucky_number}, lucky mutation number is {lucky_mutaion_num}")
     #     while 1:
     #         if gc_mutation_count[gc_keys[lucky_number]] < args.single_mutation_bits:
     #             gene_temp = gm[gc_keys[lucky_number]]
@@ -247,7 +251,7 @@ def SGA():
         gs = get_select(gene, args)
         print(f"gs = {gs}")
         gc = get_cross(gs, args)
-        gene = get_mutation(gc, args)
+        gm = get_mutation(gc, args)
         # gene = get_mutation(gc, args)
         cnt += 1
     # a = np.array([i for i in range(1,6)])
