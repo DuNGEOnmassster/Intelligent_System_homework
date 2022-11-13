@@ -16,7 +16,7 @@ def parse_args():
                         help='declare batch size for training')
     parser.add_argument('--batch_size_test', type=int, default=1000,
                         help='declare batch size for testing')
-    parser.add_argument('--epochs', type=int, default=100,
+    parser.add_argument('--epochs', type=int, default=10,
                         help='declare number of epochs to train')
     parser.add_argument('--lr', type=float, default=0.001,
                         help='declare learning rate')
@@ -58,6 +58,14 @@ test_loader = DataLoader(
                                        (0.1307,), (0.3081,))
                                ])),
     batch_size=args.batch_size_test, shuffle=True)
+valid_loader = DataLoader(
+    torchvision.datasets.MNIST(args.dataset_path, train=False, download=True,
+                               transform=torchvision.transforms.Compose([
+                                   torchvision.transforms.ToTensor(),
+                                   torchvision.transforms.Normalize(
+                                       (0.1307,), (0.3081,))
+                               ])),
+    batch_size=args.batch_size_test, shuffle=True)
 
 device = torch.device("mps")
 # 初始化网络和优化器
@@ -70,13 +78,13 @@ test_losses = []
 test_counter = [i * len(train_loader.dataset) for i in range(args.epochs)]
 
 
-def train(epoch, device):
+def train(epoch, train_loader, device):
     network.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = network(data)
-        loss = F.nll_loss(output, target)
+        loss = F.nll_loss(output, target, reduction='sum')
         loss.backward()
         optimizer.step()
         if batch_idx % args.log_interval == 0:
@@ -90,45 +98,31 @@ def train(epoch, device):
             torch.save(network.state_dict(), (args.model_save_path + 'model.pth'))
             torch.save(optimizer.state_dict(), (args.model_save_path + 'optimizer.pth'))
 
-# def train(epoch, device):
-#     network.train()
-#     train_loss = 0
-#     for batch_num, (data, target) in enumerate(train_loader):
-#         data, target = data.to(device), target.to(device)
-#         output = network(data)
-#         optimizer.zero_grad()
-#         loss = F.nll_loss(output, target)
-#         train_loss += loss.item()
-#         loss.backward()
-#         optimizer.step()
-#         progress_bar(batch_num, len(train_loader), 'Loss: %.4f' % (train_loss / (batch_num + 1)))
 
-#     print("    Average Loss: {:.4f}".format(train_loss / len(train_loader)))
-
-def test():
+def valid(valid_loader):
     network.eval()
     test_loss = 0
     correct = 0
     with torch.no_grad():
-        for data, target in test_loader:
+        for data, target in valid_loader:
             data, target = data.to(device), target.to(device)
             output = network(data)
             test_loss += F.nll_loss(output, target, size_average=False).item()
             pred = output.data.max(1, keepdim=True)[1]
             correct += pred.eq(target.data.view_as(pred)).sum()
-    test_loss /= len(test_loader.dataset)
+    test_loss /= len(valid_loader.dataset)
     test_losses.append(test_loss)
     print('\nTest set: Avgloss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
+        test_loss, correct, len(valid_loader.dataset),
+        100. * correct / len(valid_loader.dataset)))
 
 
 if __name__ == '__main__':
     device = torch.device("mps")
     # 开始训练模型
     for epoch in range(1, args.epochs + 1):
-        train(epoch, device)
-        test()
+        train(epoch, train_loader, device)
+        valid(valid_loader)
     # 绘制loss曲线
     fig = plt.figure()
     plt.plot(train_counter, train_losses, color='blue')
