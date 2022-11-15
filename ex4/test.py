@@ -1,12 +1,14 @@
 import torch
 import random
 from matplotlib import pyplot as plt
-from utils.utils import test_loader
-from train import network
+from utils.utils import init_dataloader
+from train import Net, args
 
-
-model_path = './model/model.pth'
-model = torch.load(model_path)
+_,_,test_loader = init_dataloader(args)
+network = Net()
+network_state_dict = torch.load('./model/model.pth')
+network.load_state_dict(network_state_dict)
+model = torch.load('./model/model.pth')
 # 测试是否参数都match以便模型正常执行识别任务
 print(network.load_state_dict(model, strict=False))
 
