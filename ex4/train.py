@@ -67,14 +67,14 @@ class Net(nn.Module):
         x = self.fc2(x)
         return F.log_softmax(x)
         
-
-def process():
-    device = torch.device("mps") if args.use_mps else torch.device("cpu")
 args = parse_args()
+# def process():
+device = torch.device("mps") if args.use_mps else torch.device("cpu")
+
 train_loader, valid_loader, test_loader = init_dataloader(args)
 torch.manual_seed(args.random_seed)
 # 初始化网络和优化器
-model = Net()
+model = Net().to(device)
 if args.use_Adam:
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 elif args.use_SGD:
@@ -93,6 +93,7 @@ test_counter = [i * len(train_loader.dataset) for i in range(args.n_epochs + 1)]
 def train(epoch):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
+        data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
@@ -107,7 +108,7 @@ def train(epoch):
                 (batch_idx * 64) + ((epoch - 1) * len(train_loader.dataset)))
             # save model and optim pth in each epoch as trainning epoch is too small
             torch.save(model.state_dict(), args.model_path)
-            torch.save(optimizer.state_dict(), args.optimizer.pth)
+            torch.save(optimizer.state_dict(), args.optimizer_path)
 
 
 def test():
@@ -116,6 +117,7 @@ def test():
     correct = 0
     with torch.no_grad():
         for data, target in valid_loader:
+            data, target = data.to(device), target.to(device)
             output = model(data)
             valid_loss += F.nll_loss(output, target, size_average=False).item()
             pred = output.data.max(1, keepdim=True)[1]
@@ -123,8 +125,8 @@ def test():
     valid_loss /= len(valid_loader.dataset)
     test_losses.append(valid_loss)
     print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        valid_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
+        valid_loss, correct, len(valid_loader.dataset),
+        100. * correct / len(valid_loader.dataset)))
     correct = int(correct)/len(valid_loader.dataset)
     test_acc.append(correct)
 
@@ -148,6 +150,7 @@ def draw_acc(total_epochs, test_acc):
     plt.xlabel('number of training examples seen')
     plt.ylabel('negative log likelihood acc')
     plt.show()
+
 
 if __name__ == '__main__':
     total_epochs = [0]
