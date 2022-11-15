@@ -36,8 +36,10 @@ def parse_args():
                         help="declare total number of trainning epochs")
     parser.add_argument("--dataset", default='./dataset/',
                         help="declare dataset path")
-    parser.add_argument("--model_path", default="./model/",
+    parser.add_argument("--model_path", default="./model/model.pth",
                         help="declare model save&load path")
+    parser.add_argument("--optimizer_path", default="./model/optimizer.pth",
+                        help="declare optimizer save&load path")
 
     parser.add_argument("--batch_size_train", type=int, default=64,
                         help="declare batch size of train_loader")
@@ -55,10 +57,16 @@ def parse_args():
                         help="declare momentum used in SGD")
     parser.add_argument("--log_interval", type=int, default=10,
                         help="declare log interval for loss printing")
+
+    parser.add_argument("--use_SGD", type=bool, default=False,
+                        help="declare whether to use SGD as optimizer")
+    parser.add_argument("--use_Adam", type=bool, default=True,
+                        help="declare whether to use Adam as optimizer")
     parser.add_argument("--use_mps", type=bool, default=True,
-                        help="declare whether to use mps or not, default with True")
+                        help="declare whether to use mps, default with True")
 
     return parser.parse_args()
+
 
 def process():
     device = torch.device("mps") if args.use_mps else torch.device("cpu")
@@ -67,8 +75,13 @@ train_loader, valid_loader, test_loader = init_dataloader(args)
 torch.manual_seed(args.random_seed)
 # 初始化网络和优化器
 model = Net()
-optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
-# optimizer = optim.Adam(model.parameters(), lr=args.lr)
+if args.use_Adam:
+    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+elif args.use_SGD:
+    optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
+else:
+    # default with lr 0.0001 SGD
+    optimizer = optim.SGD(model.parameters(), lr=0.0001)
 # 训练和测试分别使用两个list来存放数据
 train_losses = []
 train_counter = []
