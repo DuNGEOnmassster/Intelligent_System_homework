@@ -34,10 +34,9 @@ network = Net()
 optimizer = optim.SGD(network.parameters(), lr=learning_rate, momentum=momentum)
 # 训练和测试分别使用两个list来存放数据
 train_losses = []
-train_acc = []
 train_counter = []
 test_losses = []
-train_acc = []
+test_acc = []
 test_counter = [i * len(train_loader.dataset) for i in range(n_epochs + 1)]
 
 
@@ -76,6 +75,8 @@ def test():
     print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         valid_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
+    correct = int(correct)/len(valid_loader.dataset)
+    test_acc.append(correct)
 
 
 if __name__ == '__main__':
@@ -116,9 +117,8 @@ if __name__ == '__main__':
     plt.show()
     # 绘制acc曲线
     fig2 = plt.figure()
-    plt.plot(train_counter, train_acc, color='blue')
-    plt.scatter(test_counter, test_acc, color='red')
-    plt.legend(['Train Acc', 'Valid Acc'], loc='upper right')
+    plt.scatter(test_counter, test_acc, color='green')
+    plt.legend(['Valid Acc'], loc='upper right')
     plt.xlabel('number of training examples seen')
     plt.ylabel('negative log likelihood acc')
     plt.show()
