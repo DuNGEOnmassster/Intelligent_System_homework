@@ -49,9 +49,10 @@ def parse_args():
                         help="use this magical random seed 3407")
     parser.add_argument("--lr", type=float, default=0.01,
                         help="declare learning rate")
-    parser.add_argument("--weight_decay", type=float, default=)
+    parser.add_argument("--weight_decay", type=float, default=1e-6,
+                        help="declare weight decay used in Adam")
     parser.add_argument("--momentum", type=float, default=0.5,
-                        help="declare momentum")
+                        help="declare momentum used in SGD")
     parser.add_argument("--log_interval", type=int, default=10,
                         help="declare log interval for loss printing")
     parser.add_argument("--use_mps", type=bool, default=True,
@@ -59,7 +60,8 @@ def parse_args():
 
     return parser.parse_args()
 
-# def process():
+def process():
+    device = torch.device("mps") if args.use_mps else torch.device("cpu")
 args = parse_args()
 train_loader, valid_loader, test_loader = init_dataloader(args)
 torch.manual_seed(args.random_seed)
