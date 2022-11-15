@@ -7,28 +7,6 @@ import argparse
 from utils.utils import init_dataloader
 
 
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        # 卷积层
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.conv2_drop = nn.Dropout2d()
-        # 全连接层
-        self.fc1 = nn.Linear(320, 50)
-        self.fc2 = nn.Linear(50, 10)
-
-    def forward(self, x):
-        # 激活层
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
-        x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
-        x = self.fc2(x)
-        return F.log_softmax(x)
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description="MNIST implementation in pytorch")
 
@@ -68,6 +46,28 @@ def parse_args():
     return parser.parse_args()
 
 
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        # 卷积层
+        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
+        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
+        self.conv2_drop = nn.Dropout2d()
+        # 全连接层
+        self.fc1 = nn.Linear(320, 50)
+        self.fc2 = nn.Linear(50, 10)
+
+    def forward(self, x):
+        # 激活层
+        x = F.relu(F.max_pool2d(self.conv1(x), 2))
+        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(-1, 320)
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, training=self.training)
+        x = self.fc2(x)
+        return F.log_softmax(x)
+        
+
 def process():
     device = torch.device("mps") if args.use_mps else torch.device("cpu")
 args = parse_args()
@@ -82,7 +82,7 @@ elif args.use_SGD:
 else:
     # default with lr 0.0001 SGD
     optimizer = optim.SGD(model.parameters(), lr=0.0001)
-# 训练和测试分别使用两个list来存放数据
+
 train_losses = []
 train_counter = []
 test_losses = []
@@ -105,9 +105,9 @@ def train(epoch):
             train_losses.append(loss.item())
             train_counter.append(
                 (batch_idx * 64) + ((epoch - 1) * len(train_loader.dataset)))
-            # 保存每次训练后的参数
-            torch.save(model.state_dict(), './model/model.pth')
-            torch.save(optimizer.state_dict(), './model/optimizer.pth')
+            # save model and optim pth in each epoch as trainning epoch is too small
+            torch.save(model.state_dict(), args.model_path)
+            torch.save(optimizer.state_dict(), args.optimizer.pth)
 
 
 def test():
@@ -130,7 +130,7 @@ def test():
 
 
 def draw_loss(train_counter, train_losses, test_counter, test_losses):
-    # 绘制loss曲线
+    # draw loss curve
     fig = plt.figure()
     plt.plot(train_counter, train_losses, color='blue')
     plt.scatter(test_counter, test_losses, color='red')
@@ -141,7 +141,7 @@ def draw_loss(train_counter, train_losses, test_counter, test_losses):
 
 
 def draw_acc(total_epochs, test_acc):
-    # 绘制acc曲线
+    # draw acc curve
     fig = plt.figure()
     plt.plot(total_epochs, test_acc, color='green')
     plt.legend(['Valid Acc'], loc='upper right')
@@ -150,7 +150,6 @@ def draw_acc(total_epochs, test_acc):
     plt.show()
 
 if __name__ == '__main__':
-    # 开始训练模型
     total_epochs = [0]
     test()
     for epoch in range(1, args.n_epochs + 1):
