@@ -6,7 +6,7 @@ import argparse
 import matplotlib.pyplot as plt
 import torchvision
 from torch.utils.data import DataLoader
-from utils.utils import Net, progress_bar
+from utils.utils import *
 
 
 def parse_args():
@@ -51,7 +51,7 @@ train_loader = DataLoader(
                                ])),
     batch_size=args.batch_size_train, shuffle=True)
 test_loader = DataLoader(
-    torchvision.datasets.MNIST(args.dataset_path, train=False, download=True,
+    torchvision.datasets.MNIST(args.dataset_path, train=False,
                                transform=torchvision.transforms.Compose([
                                    torchvision.transforms.ToTensor(),
                                    torchvision.transforms.Normalize(
@@ -59,7 +59,7 @@ test_loader = DataLoader(
                                ])),
     batch_size=args.batch_size_test, shuffle=True)
 valid_loader = DataLoader(
-    torchvision.datasets.MNIST(args.dataset_path, train=False, download=True,
+    torchvision.datasets.MNIST(args.dataset_path, train=False,
                                transform=torchvision.transforms.Compose([
                                    torchvision.transforms.ToTensor(),
                                    torchvision.transforms.Normalize(
@@ -99,30 +99,32 @@ def train(epoch, train_loader, device):
             torch.save(optimizer.state_dict(), (args.model_save_path + 'optimizer.pth'))
 
 
-def valid(valid_loader):
+def test(test_loader, device):
     network.eval()
     test_loss = 0
     correct = 0
     with torch.no_grad():
-        for data, target in valid_loader:
+        for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             output = network(data)
             test_loss += F.nll_loss(output, target, size_average=False).item()
             pred = output.data.max(1, keepdim=True)[1]
             correct += pred.eq(target.data.view_as(pred)).sum()
-    test_loss /= len(valid_loader.dataset)
+    test_loss /= len(test_loader.dataset)
     test_losses.append(test_loss)
     print('\nTest set: Avgloss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        test_loss, correct, len(valid_loader.dataset),
-        100. * correct / len(valid_loader.dataset)))
+        test_loss, correct, len(test_loader.dataset),
+        100. * correct / len(test_loader.dataset)))
 
 
 if __name__ == '__main__':
     device = torch.device("mps")
+    criterion = nn.CrossEntropyLoss()
     # 开始训练模型
     for epoch in range(1, args.epochs + 1):
         train(epoch, train_loader, device)
-        valid(valid_loader)
+        test(test_loader, device)
+        # test_model(test_loader,criterion,network)
     # 绘制loss曲线
     fig = plt.figure()
     plt.plot(train_counter, train_losses, color='blue')
