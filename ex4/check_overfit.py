@@ -62,12 +62,7 @@ def process():
     network_state_dict = torch.load('./model/model.pth')
     model.load_state_dict(network_state_dict)
     test(model, test_loader, device, test_losses, test_acc, test_counter)
-    draw_loss(test_counter, test_losses)
-    examples = enumerate(test_loader, start=100)
-    batch_idx, (example_data, example_targets) = next(examples)
-    with torch.no_grad():
-        output = model(example_data)
-    show_examples(output, example_data)
+
 
 if __name__ == "__main__":
     process()

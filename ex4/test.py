@@ -1,7 +1,6 @@
 import torch
 from matplotlib import pyplot as plt
-from utils.utils import init_dataloader
-from train import Net, args
+from train import Net, args, test_loader
 
 
 def show_examples(output, example_data):
@@ -20,7 +19,6 @@ def show_examples(output, example_data):
 
 
 def process():
-    _,_,test_loader = init_dataloader(args)
     model = Net()
     network_state_dict = torch.load('./model/model.pth')
     model.load_state_dict(network_state_dict)

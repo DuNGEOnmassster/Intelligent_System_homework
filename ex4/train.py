@@ -70,7 +70,7 @@ class Net(nn.Module):
 args = parse_args()
 # def process():
 device = torch.device("mps") if args.use_mps else torch.device("cpu")
-
+device = "cpu"
 train_loader, valid_loader, test_loader = init_dataloader(args)
 torch.manual_seed(args.random_seed)
 # 初始化网络和优化器
@@ -84,6 +84,7 @@ else:
     optimizer = optim.SGD(model.parameters(), lr=0.0001)
 
 train_losses = []
+train_acc = []
 train_counter = []
 test_losses = []
 test_acc = []
@@ -92,11 +93,14 @@ test_counter = [i * len(train_loader.dataset) for i in range(args.n_epochs + 1)]
 
 def train(epoch):
     model.train()
+    correct = 0
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
+        pred = output.data.max(1, keepdim=True)[1]
+        correct += pred.eq(target.data.view_as(pred)).sum()
         loss.backward()
         optimizer.step()
         if batch_idx % args.log_interval == 0:
@@ -109,6 +113,11 @@ def train(epoch):
             # save model and optim pth in each epoch as trainning epoch is too small
             torch.save(model.state_dict(), args.model_path)
             torch.save(optimizer.state_dict(), args.optimizer_path)
+    print('\nTrain set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
+        loss, correct, len(train_loader.dataset),
+        100. * correct / len(train_loader.dataset)))
+    correct = int(correct)/len(train_loader.dataset)
+    train_acc.append(correct)
 
 
 def test():
@@ -145,8 +154,9 @@ def draw_loss(train_counter, train_losses, test_counter, test_losses):
 def draw_acc(total_epochs, test_acc):
     # draw acc curve
     fig = plt.figure()
+    plt.plot(total_epochs[1:],train_acc, color='red')
     plt.plot(total_epochs, test_acc, color='green')
-    plt.legend(['Valid Acc'], loc='upper right')
+    plt.legend(['Train Acc', 'Valid Acc'], loc='upper right')
     plt.xlabel('number of training examples seen')
     plt.ylabel('negative log likelihood acc')
     plt.show()
