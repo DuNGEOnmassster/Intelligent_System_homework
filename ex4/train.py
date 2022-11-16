@@ -101,6 +101,7 @@ def train(epoch):
         loss = F.nll_loss(output, target)
         pred = output.data.max(1, keepdim=True)[1]
         correct += pred.eq(target.data.view_as(pred)).sum()
+        optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         if batch_idx % args.log_interval == 0:
