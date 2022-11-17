@@ -1,6 +1,7 @@
 import torch
 import torchvision
 from torch.utils import data as Data
+import numpy as np
 
 def init_dataloader(args):
     torch.manual_seed(args.random_seed)
@@ -24,8 +25,9 @@ def init_dataloader(args):
 
     # generate valid dataset and test dataset from origin dataset
     origin_dataset = origin_loader.dataset
+    # origin_dataset = np.random.shuffle(origin_dataset)
     valid_split = args.valid_split
-    valid_dataset,test_dataset = Data.random_split(origin_dataset,[int(len(origin_dataset)*valid_split), len(origin_dataset) - int(len(origin_dataset)*valid_split)])
+    valid_dataset,test_dataset = torch.utils.data.random_split(origin_dataset,[int(len(origin_dataset)*valid_split), len(origin_dataset) - int(len(origin_dataset)*valid_split)])
 
     # get valid loader and test loader
     valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size = args.batch_size_test, shuffle = True, num_workers = 0)
@@ -53,7 +55,7 @@ if __name__ == "__main__":
     #   print(target)
     #   print(type(test_loader))
     print(train_loader.dataset)
-    print(valid_loader.dataset)
-    print(test_loader.dataset)
-    print(valid_loader.dataset[0][1])
-    print(test_loader.dataset[0][1])
+    print(valid_loader.dataset.dataset)
+    print(test_loader.dataset.dataset)
+    print(valid_loader.dataset[1][1])
+    print(test_loader.dataset[1][1])
