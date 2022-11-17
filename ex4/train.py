@@ -23,8 +23,8 @@ def parse_args():
                         help="declare batch size of train_loader")
     parser.add_argument("--batch_size_test", type=int, default=1000,
                         help="declare batch size of test_loader")
-    parser.add_argument("--valid_split", type=float, default=0.5,
-                        help="declare proportion of valid in test_loader split, default with (valid = test)")
+    parser.add_argument("--valid_split", type=float, default=0.3,
+                        help="declare proportion of valid in test_loader split, default with 0.3")
     parser.add_argument("--random_seed", type=int, default=3407,
                         help="use this magical random seed 3407")
     parser.add_argument("--lr", type=float, default=0.01,
@@ -172,3 +172,4 @@ if __name__ == '__main__':
         test()
     draw_loss(train_counter, train_losses, test_counter, test_losses)
     draw_acc(total_epochs, test_acc)
+
