@@ -46,16 +46,13 @@ if __name__ == "__main__":
         batch_size_train = 64
         batch_size_valid = 1000
         batch_size_test = 16
-        valid_split = 0.5
+        valid_split = 0.3
             
     args = fake_args()
     train_loader,valid_loader,test_loader = init_dataloader(args)
-    # for data, target in test_loader:
-    #   print(data)
-    #   print(target)
-    #   print(type(test_loader))
+
     print(train_loader.dataset)
-    print(valid_loader.dataset.dataset)
-    print(test_loader.dataset.dataset)
+    print(valid_loader.dataset.dataset, "\nLength of valid loader: ", len(valid_loader))
+    print(test_loader.dataset.dataset, "\nLength of test loader: ", len(test_loader))
     print(valid_loader.dataset[1][1])
     print(test_loader.dataset[1][1])
