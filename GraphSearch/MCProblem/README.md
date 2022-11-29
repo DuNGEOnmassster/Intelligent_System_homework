@@ -11,3 +11,5 @@ Each transport should satisfy two conditions:
 Otherwise Missionaries will be eaten by Cannibals.
 
 Find the transport solution and draw every states.
+
+![](./solution.png)
