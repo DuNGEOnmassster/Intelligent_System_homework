@@ -16,13 +16,14 @@ def parse_args():
 class S:
     m: int  # M in left side
     c: int  # C in left side
-    b: bool # boat side, 0 equals to left and 1 equals to right
+    b: bool # boat side, 1 equals to left and 0 equals to right
 
 
 def get_init():
     start_state = S(3,3,1)
     target_state = S(0,0,0)
     return start_state, target_state
+
 
 if __name__ == "__main__":
     args = parse_args()
