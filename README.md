@@ -2,6 +2,7 @@
 Repo to restore my Intelligent System cource coding homework
 
 
+
 ```
 Intelligent_System_homework
 ├─ .DS_Store
@@ -21,10 +22,45 @@ Intelligent_System_homework
 │  ├─ chp3_problem9.py
 │  └─ retina.png
 ├─ 0922homework
+├─ CNN
+│  └─ README.md
+├─ GNN
+│  ├─ README.md
+│  └─ Sequence_pred
+│     ├─ Data
+│     │  ├─ disease.txt
+│     │  ├─ drug.txt
+│     │  ├─ mat_drug_disease.txt
+│     │  ├─ mat_drug_drug.txt
+│     │  ├─ mat_drug_protein.txt
+│     │  ├─ mat_drug_side_effect.txt
+│     │  ├─ mat_protein_disease.txt
+│     │  ├─ mat_protein_protein.txt
+│     │  ├─ protein.txt
+│     │  ├─ side_effect.txt
+│     │  └─ 数据说明.txt
+│     ├─ README.md
+│     ├─ drug.txt
+│     ├─ mat_drug_drug.txt
+│     └─ test.py
 ├─ GeneticAlgorithm
 │  ├─ .DS_Store
 │  ├─ README.md
-│  ├─ TPS.py
+│  ├─ TSP
+│  │  ├─ .idea
+│  │  │  ├─ TSP.iml
+│  │  │  ├─ inspectionProfiles
+│  │  │  │  └─ profiles_settings.xml
+│  │  │  ├─ misc.xml
+│  │  │  ├─ modules.xml
+│  │  │  └─ workspace.xml
+│  │  ├─ __pycache__
+│  │  │  ├─ utils.cpython-310.pyc
+│  │  │  └─ utils.cpython-36.pyc
+│  │  ├─ main.py
+│  │  ├─ test.py
+│  │  └─ utils.py
+│  ├─ TSP.py
 │  └─ choice.py
 ├─ GraphSearch
 │  ├─ .DS_Store
@@ -50,26 +86,22 @@ Intelligent_System_homework
 │  │  ├─ DFS.py
 │  │  ├─ README.md
 │  │  └─ traffic_map.jpg
+│  ├─ MCProblem
+│  │  ├─ README.md
+│  │  ├─ main.py
+│  │  └─ solution.png
 │  └─ README.md
 ├─ Heuristic
 │  ├─ check_round.py
 │  └─ find_round.py
 ├─ README.md
-├─ TSP
-│  ├─ .idea
-│  │  ├─ TSP.iml
-│  │  ├─ inspectionProfiles
-│  │  │  └─ profiles_settings.xml
-│  │  ├─ misc.xml
-│  │  ├─ modules.xml
-│  │  └─ workspace.xml
-│  ├─ __pycache__
-│  │  ├─ utils.cpython-310.pyc
-│  │  └─ utils.cpython-36.pyc
-│  ├─ main.py
-│  ├─ test.py
-│  └─ utils.py
-├─ TSP.rar
+├─ RNN
+│  ├─ .ipynb_checkpoints
+│  │  └─ Sequence_simple_demo-checkpoint.ipynb
+│  ├─ Sequence_simple_demo.ipynb
+│  └─ test.py
+├─ data
+│  └─ timemachine.txt
 ├─ ex1
 │  ├─ .DS_Store
 │  ├─ .ipynb_checkpoints
