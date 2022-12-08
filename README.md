@@ -99,9 +99,9 @@ Intelligent_System_homework
 │  ├─ .ipynb_checkpoints
 │  │  └─ Sequence_simple_demo-checkpoint.ipynb
 │  ├─ Sequence_simple_demo.ipynb
+│  ├─ data
+│  │  └─ timemachine.txt
 │  └─ test.py
-├─ data
-│  └─ timemachine.txt
 ├─ ex1
 │  ├─ .DS_Store
 │  ├─ .ipynb_checkpoints
@@ -172,11 +172,12 @@ Intelligent_System_homework
 │     ├─ __pycache__
 │     │  └─ utils.cpython-310.pyc
 │     └─ utils.py
-└─ funny_attempt
-   ├─ cursor_sql.py
-   ├─ insert_sql.py
-   ├─ monkey.py
-   ├─ test_df.py
-   └─ test_mps.py
+├─ funny_attempt
+│  ├─ cursor_sql.py
+│  ├─ insert_sql.py
+│  ├─ monkey.py
+│  ├─ test_df.py
+│  └─ test_mps.py
+└─ test.txt
 
 ```
