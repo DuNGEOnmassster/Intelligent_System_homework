@@ -1,8 +1,10 @@
 import gym
+import numpy as np
 
-env = gym.make("Taxi-v3",render_mode='rgb_array').env
-env.reset() # reset environment to a new, random state
-env.render()
+env = gym.make("FrozenLake-v1")
+n_observations = env.observation_space.n
+n_actions = env.action_space.n
 
-print("Action Space {}".format(env.action_space))
-print("State Space {}".format(env.observation_space))
+#Initialize the Q-table to 0
+Q_table = np.zeros((n_observations,n_actions))
+print(Q_table)
