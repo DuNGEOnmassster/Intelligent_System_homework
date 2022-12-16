@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-	Copy from Greatpan
-	基于深度优先搜索（穷举法）的旅行商问题解法Python源码
+    Copy from Greatpan
+	基于回溯法的旅行商问题解法Python源码
 
 	Author:	Greatpan
 	Date:	2018.10.10
 """
 
 import numpy as np
-import math
 import time
 from common import GetData,ResultShow,draw
-
+import Greedy
 
 def CalcPath_sum(layer,i):
 	"""
@@ -31,10 +30,28 @@ def CalcPath_sum(layer,i):
 	return Path_sum
 
 
-def DFSMethod(Dist,CityNum,layer):
+def IsPrun(layer,i):
 	"""
-	函数名：DFSMethod(Dist,CityNum,layer)
-	函数功能： 深度优先搜索算法核心
+	函数名：IsPrun(layer,i)
+	函数功能：判断是否符合剪枝条件，符合则返回True,不符合则返回False
+		输入	1: layer 回溯所处的层数，也即所遍历的城市数
+			2: i 当前层数下接下来要访问的子节点，即要访问的下一个城市
+		输出	1: 是——返回True，否——返回False
+	其他说明：Path_sum 求的的是当前递归所处的层数的累积路径值+到下一个节点的距离
+	"""
+	Path_sum=CalcPath_sum(layer,i)
+
+	# Path_sum值大于当前所求得的最小距离时则进行剪枝(True),否则不减枝(False)
+	if Path_sum >= Cur_Min_Path:
+		return True
+	else:
+		return False
+
+
+def BackTrackingMethod(Dist,CityNum,layer):
+	"""
+	函数名：BackTrackingMethod(Dist,CityNum,layer)
+	函数功能： 动态规划算法的程序入口
 		输入	1 CityNum：城市数量
 			2 Dist：城市间距离矩阵
             3 layer:旅行商所处层数，也即遍历的城市数
@@ -42,7 +59,6 @@ def DFSMethod(Dist,CityNum,layer):
 	其他说明：无
 	"""
 	global Path_sum,Cur_Min_Path,Min_Path,BestPath
-	#如果所有城市都遍历完成，则记录最小
 	if(layer==CityNum):
 		Path_sum=CalcPath_sum(layer,0)
 		if(Path_sum<=Cur_Min_Path):
@@ -50,35 +66,38 @@ def DFSMethod(Dist,CityNum,layer):
 			Min_Path=Cur_Min_Path
 			BestPath=Curpath.tolist()
 			BestPath.append(0)
-	#否则递归回溯
 	else:
 		for i in range(layer,CityNum):
-			Curpath[i],Curpath[layer] = Curpath[layer],Curpath[i]  # 路径交换一下
-			DFSMethod(Dist, CityNum, layer+1)
-			Curpath[i],Curpath[layer] = Curpath[layer],Curpath[i]  # 路径交换回来
+			#判断是否符合剪枝条件，不符合则继续执行
+			if IsPrun(layer,i):
+				continue
+			else:
+				Curpath[i],Curpath[layer] = Curpath[layer],Curpath[i]  # 路径交换一下
+				BackTrackingMethod(Dist, CityNum, layer+1)
+				Curpath[i],Curpath[layer] = Curpath[layer],Curpath[i]  # 路径交换回来
 
 ##############################程序入口#########################################
 if __name__ == "__main__":
-	Position,CityNum,Dist = GetData("./data/TSP100cities.tsp")
+	Position,CityNum,Dist = GetData("./data/TSP10cities.tsp")
 	Curpath = np.arange(CityNum)
 	Min_Path=0
 	BestPath=[]
-	Cur_Min_Path = math.inf
-	
+	Cur_Min_Path = Greedy.GreedyMethond(CityNum,Dist)[0]
+
 	start = time.time()				#程序计时开始
-	DFSMethod(Dist,CityNum,1)	        #调用深度优先搜索核心算法
+	BackTrackingMethod(Dist,CityNum,1)	#调用回溯法
 	end = time.time()					#程序计时结束
-	
+
 	print()
-	ResultShow(Min_Path,BestPath,CityNum,"穷举法之深度优先搜索策略")
+	ResultShow(Min_Path,BestPath,CityNum,"回溯法")
 	print("程序的运行时间是：%s"%(end-start))
-	draw(BestPath,Position,"DFS Method")
+	draw(BestPath,Position,"BackTracking Method")
 
 """
 结果：
-穷举法之深度优先搜索策略求得最短旅行商经过所有城市回到原城市的最短路径为：
+回溯法求得最短旅行商经过所有城市回到原城市的最短路径为：
 0->4->6->7->1->3->2->5->8->9->0
 总路径长为：10127.552143541276
 
-程序的运行时间是：4.845021001
+程序的运行时间是：0.245802962
 """
