@@ -1,13 +1,5 @@
 """
 This part of code is the DQN brain, which is a brain of the agent.
-All decisions are made in here.
-Using Tensorflow to build the neural network.
-
-View more on my tutorial page: https://morvanzhou.github.io/tutorials/
-
-Using:
-Tensorflow: 1.0
-gym: 0.7.3
 """
 
 import numpy as np
@@ -15,8 +7,8 @@ import pandas as pd
 import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-np.random.seed(1)
-tf.set_random_seed(1)
+np.random.seed(3407)
+tf.set_random_seed(3407)
 
 
 # Deep Q Network off-policy
@@ -140,7 +132,7 @@ class DeepQNetwork:
         # check to replace target parameters
         if self.learn_step_counter % self.replace_target_iter == 0:
             self.sess.run(self.replace_target_op)
-            print('\ntarget_params_replaced\n')
+            print(f'target_params_replaced {str(self.learn_step_counter / self.replace_target_iter)[0]} times\n')
 
         # sample batch memory from all memory
         if self.memory_counter > self.memory_size:

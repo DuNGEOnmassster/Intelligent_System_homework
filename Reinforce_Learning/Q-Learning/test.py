@@ -102,3 +102,4 @@ Q, stats = qLearning(env, 1000)
 
 # Step6 Plot important statistics.
 plotting.plot_episode_stats(stats=stats)
+
