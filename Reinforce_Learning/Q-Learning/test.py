@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import sys
 from collections import defaultdict
-from windy_gridworld import WindyGridworldEnv
-import plotting
+from utils.windy_gridworld import WindyGridworldEnv
+import utils.plotting as plotting
 
 matplotlib.style.use('ggplot')
 
@@ -96,3 +96,9 @@ def qLearning(env, num_episodes, discount_factor = 1.0,
 			state = next_state
 	
 	return Q, stats
+
+# Step5 Training
+Q, stats = qLearning(env, 1000)
+
+# Step6 Plot important statistics.
+plotting.plot_episode_stats(stats=stats)

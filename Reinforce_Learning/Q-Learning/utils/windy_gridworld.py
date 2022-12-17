@@ -3,7 +3,7 @@ import gym
 import numpy as np
 import sys
 
-import discrete
+import utils.discrete as discrete
 
 UP = 0
 RIGHT = 1
