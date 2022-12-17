@@ -1,11 +1,14 @@
 import gym
+import itertools
+import matplotlib
+import matplotlib.style
 import numpy as np
+import pandas as pd
+import sys
 
-env = gym.make("FrozenLake-v1")
-n_observations = env.observation_space.n
-n_actions = env.action_space.n
 
-#Initialize the Q-table to 0
-Q_table = np.zeros((n_observations,n_actions))
-print(Q_table)
+from collections import defaultdict
+from windy_gridworld import WindyGridworldEnv
+import plotting
 
+matplotlib.style.use('ggplot')
