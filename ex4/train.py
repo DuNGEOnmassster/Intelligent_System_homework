@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import argparse
 from utils.utils import init_dataloader
 
-
 def parse_args():
     parser = argparse.ArgumentParser(description="MNIST implementation in pytorch")
 

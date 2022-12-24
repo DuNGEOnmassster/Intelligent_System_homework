@@ -3,7 +3,6 @@ import torch.nn.functional as F
 from matplotlib import pyplot as plt
 from train import Net, args, test_loader
 
-
 def show_examples(output, example_data):
     fig = plt.figure()
     for i in range(16):

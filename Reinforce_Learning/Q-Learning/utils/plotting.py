@@ -60,7 +60,7 @@ def plot_value_function(V, title="Value Function"):
 
 
 
-def plot_episode_stats(stats, smoothing_window=10, noshow=False):
+def plot_episode_stats(stats, smoothing_window=10):
     # Plot the episode length over time
     fig1 = plt.figure(figsize=(10,5))
     # plt.subplot(131)
@@ -68,10 +68,7 @@ def plot_episode_stats(stats, smoothing_window=10, noshow=False):
     plt.xlabel("Episode")
     plt.ylabel("Episode Length")
     plt.title("Episode Length over Time")
-    # if noshow:
-    #     plt.close()
-    # else:
-    #     plt.show()
+    plt.show()
 
     # Plot the episode reward over time
     fig2 = plt.figure(figsize=(10,5))
@@ -81,10 +78,7 @@ def plot_episode_stats(stats, smoothing_window=10, noshow=False):
     plt.xlabel("Episode")
     plt.ylabel("Episode Reward (Smoothed)")
     plt.title("Episode Reward over Time (Smoothed over window size {})".format(smoothing_window))
-    # if noshow:
-    #     plt.close()
-    # else:
-    #     plt.show()
+    plt.show()
 
     # Plot time steps and episode number
     fig3 = plt.figure(figsize=(10,5))
@@ -93,9 +87,6 @@ def plot_episode_stats(stats, smoothing_window=10, noshow=False):
     plt.xlabel("Time Steps")
     plt.ylabel("Episode")
     plt.title("Episode per time step")
-    if noshow:
-        plt.close()
-    else:
-        plt.show()
+    plt.show()
 
     return fig1, fig2, fig3

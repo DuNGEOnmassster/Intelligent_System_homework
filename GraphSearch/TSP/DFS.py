@@ -59,7 +59,7 @@ def DFSMethod(Dist,CityNum,layer):
 
 ##############################程序入口#########################################
 if __name__ == "__main__":
-	Position,CityNum,Dist = GetData("./data/TSP100cities.tsp")
+	Position,CityNum,Dist = GetData("./data/TSP40cities.tsp")
 	Curpath = np.arange(CityNum)
 	Min_Path=0
 	BestPath=[]

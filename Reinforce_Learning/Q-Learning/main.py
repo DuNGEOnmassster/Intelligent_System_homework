@@ -17,15 +17,6 @@ env = WindyGridworldEnv()
 
 # Step3  Make the $\epsilon$-greedy policy
 def createEpsilonGreedyPolicy(Q, epsilon, num_actions):
-	"""
-	Creates an epsilon-greedy policy based
-	on a given Q-function and epsilon.
-	
-	Returns a function that takes the state
-	as an input and returns the probabilities
-	for each action in the form of a numpy array
-	of length of the action space(set of possible actions).
-	"""
 	def policyFunction(state):
 
 		Action_probabilities = np.ones(num_actions,
@@ -98,7 +89,7 @@ def qLearning(env, num_episodes, discount_factor = 1.0,
 	return Q, stats
 
 # Step5 Training
-Q, stats = qLearning(env, 1000)
+Q, stats = qLearning(env, 300)
 
 # Step6 Plot important statistics.
 plotting.plot_episode_stats(stats=stats)
