@@ -2,9 +2,7 @@ import math
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.pylab import mpl
-mpl.rcParams['font.sans-serif'] = ['SimHei']
-
+from common import GetData,ResultShow,draw
 
 def calFitness(line,dis_matrix):
     dis_sum = 0
@@ -99,7 +97,18 @@ def draw_path(line,CityCoordinates):
     plt.xlabel('x')
     plt.ylabel('y')
     plt.show()
-   
+
+
+def get_city(path):
+    CityCoordinates = []
+    with open(path, "r") as file:
+        all_line = file.readlines()
+        for line in all_line:
+            point = line.split("\n")[0].split(" ")[-2:]
+            CityCoordinates.append((int(point[0]), int(point[1])))
+    return CityCoordinates
+
+
 if __name__ == '__main__':
     #参数
     CityNum = 20#城市数量
@@ -112,9 +121,7 @@ if __name__ == '__main__':
     pc = 0.95   #交叉概率
     pm = 0.1    #变异概率
 
-    #随机生成城市数据,城市序号为0,1,2,3...
-    CityCoordinates = [(random.randint(MinCoordinate,MaxCoordinate),random.randint(MinCoordinate,MaxCoordinate)) for i in range(CityNum)]
-    # CityCoordinates = [(88, 16),(42, 76),(5, 76),(69, 13),(73, 56),(100, 100),(22, 92),(48, 74),(73, 46),(39, 1),(51, 75),(92, 2),(101, 44),(55, 26),(71, 27),(42, 81),(51, 91),(89, 54),(33, 18),(40, 78)]#随机生成的例子
+    CityCoordinates = get_city("./data/TSP10cities.tsp")
     #计算城市之间的距离
     dis_matrix = pd.DataFrame(data=None,columns=range(len(CityCoordinates)),index=range(len(CityCoordinates)))
     for i in range(len(CityCoordinates)):
@@ -122,7 +129,7 @@ if __name__ == '__main__':
         for j in range(len(CityCoordinates)):
             xj,yj = CityCoordinates[j][0],CityCoordinates[j][1]
             dis_matrix.iloc[i,j] = round(math.sqrt((xi-xj)**2+(yi-yj)**2),2)
-    
+
     iteration = 0
     #初始化,随机构造
     pops = [random.sample([i for i in list(range(len(CityCoordinates)))],len(CityCoordinates)) for j in range(popsize)]
