@@ -1,5 +1,6 @@
 import math
 import random
+import time
 import pandas as pd
 import matplotlib.pyplot as plt
 from common import GetData,ResultShow,draw
@@ -93,6 +94,7 @@ def draw_path(line,CityCoordinates):
         y.append(Coordinate[1])
     x.append(x[0])
     y.append(y[0])
+    plt.title("Genetic Algorithm TSP")
     plt.plot(x, y,'r-', color='#4169E1', alpha=0.8, linewidth=0.8)
     plt.xlabel('x')
     plt.ylabel('y')
@@ -115,13 +117,13 @@ if __name__ == '__main__':
     MinCoordinate = 0#二维坐标最小值
     MaxCoordinate = 101#二维坐标最大值
     #GA参数
-    generation = 100  #迭代次数
+    generation = 10000  #迭代次数
     popsize = 100   #种群大小
     tournament_size = 5 #锦标赛小组大小
     pc = 0.95   #交叉概率
     pm = 0.1    #变异概率
 
-    CityCoordinates = get_city("./data/TSP10cities.tsp")
+    CityCoordinates = get_city("./data/TSP100cities.tsp")
     #计算城市之间的距离
     dis_matrix = pd.DataFrame(data=None,columns=range(len(CityCoordinates)),index=range(len(CityCoordinates)))
     for i in range(len(CityCoordinates)):
@@ -145,6 +147,10 @@ if __name__ == '__main__':
     best_fit_list = []
     best_fit_list.append(best_fit)
     
+    pre_fit = best_fit
+    repeat = 0
+    early_stop = False
+    start = time.time()				#程序计时开始
     while iteration <= generation:
         #锦标赛赛选择
         pop1,fits1 = tournament_select(pops,popsize,fits,tournament_size)
@@ -171,12 +177,25 @@ if __name__ == '__main__':
         
         print('第%d代最优值 %.1f' % (iteration, best_fit))
         iteration += 1
-    
+
+        # if repeat >= 10:
+        #     early_stop = True
+        #     end = time.time()
+        #     break
+
+        if best_fit == pre_fit:
+            repeat += 1
+        else:
+            repeat = 0
+            pre_fit = best_fit
+        
+    if early_stop:
+        print("程序的运行时间是：%s"%(end-start))
+    else:
+        end = time.time()
+        print("程序的运行时间是：%s"%(end-start))
+
     #路径顺序
     print(best_pop)
     #路径图
     draw_path(best_pop,CityCoordinates)
-    #迭代图
-    iters = list(range(len(best_fit_list)))
-    plt.plot(iters, best_fit_list, 'r-', color='#4169E1', alpha=0.8, linewidth=0.8)
-    plt.xlabel('迭代次数')
