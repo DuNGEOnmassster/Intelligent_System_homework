@@ -101,7 +101,7 @@ def train(epoch):
         pred = output.data.max(1, keepdim=True)[1]
         correct += pred.eq(target.data.view_as(pred)).sum()
         optimizer.zero_grad()
-        loss.backward()
+        loss.backward() 
         optimizer.step()
         if batch_idx % args.log_interval == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(

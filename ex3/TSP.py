@@ -242,17 +242,17 @@ def check_target(gene: dict, args, cnt):
 
 # def SGA(C, E, P0, M, end):
 def SGA():
+    # init gene groups
     args = parse_args()
     gene = get_init(args)
     cnt = 1
-    # check_target(gene, args, cnt)
+    # if target, stop while
     while not check_target(gene, args, cnt):
         print(f"Generation {cnt}")
         gs = get_select(gene, args)
         print(f"gs = {gs}")
         gc = get_cross(gs, args)
-        gm = get_mutation(gc, args)
-        # gene = get_mutation(gc, args)
+        gene = get_mutation(gc, args)
         cnt += 1
     # a = np.array([i for i in range(1,6)])
     # b = np.array([i for i in range(2,7)])
